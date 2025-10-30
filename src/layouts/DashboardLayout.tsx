@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { Sidebar } from '@/components/Sidebar'
 import DashboardPage from '@/pages/DashboardPage'
 import StudentsPage from '@/pages/StudentsPage'
+import AddStudentPage from '@/pages/AddStudentPage'
 import TeachersPage from '@/pages/TeachersPage'
 import ClassesPage from '@/pages/ClassesPage'
 import AttendancePage from '@/pages/AttendancePage'
@@ -20,6 +21,7 @@ export default function DashboardLayout() {
           <Routes>
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/students" element={<StudentsPage />} />
+            <Route path="/students/add" element={<AddStudentPage />} />
             <Route path="/teachers" element={<TeachersPage />} />
             <Route path="/classes" element={<ClassesPage />} />
             <Route path="/attendance" element={<AttendancePage />} />

@@ -1,4 +1,5 @@
 import { PlusIcon, SearchIcon, PhoneIcon } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 
 const students = [
   { id: 1, name: "John Doe", grade: "5A", age: 11, parent: "Mary Doe", contact: "+1234567890" },
@@ -9,6 +10,8 @@ const students = [
 ]
 
 export default function StudentsPage() {
+  const navigate = useNavigate()
+  
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -18,7 +21,10 @@ export default function StudentsPage() {
             Manage student records and information
           </p>
         </div>
-        <button className="flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
+        <button 
+          onClick={() => navigate("/students/add")}
+          className="flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+        >
           <PlusIcon className="h-4 w-4" />
           Add Student
         </button>
