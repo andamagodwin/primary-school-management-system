@@ -1,4 +1,5 @@
 import * as React from "react"
+import { NavLink } from "react-router-dom"
 import {
   LayoutDashboardIcon,
   UsersIcon,
@@ -7,48 +8,64 @@ import {
   SettingsIcon,
   MenuIcon,
   XIcon,
+  LogOutIcon,
 } from "lucide-react"
+import { useAuthStore } from "@/store/authStore"
+
+interface User {
+  $id: string
+  userId: string
+  email: string
+  fullName: string
+  userType: "admin" | "teacher" | "staff" | "parent"
+  phoneNumber?: string
+  status: "active" | "inactive" | "suspended"
+  avatar?: string
+  employeeId?: string
+  dateJoined: string
+  lastLogin?: string
+}
 
 interface SidebarProps {
-  activePage: string
-  onPageChange: (page: string) => void
+  user: User | null
 }
 
 const menuItems = [
   {
     title: "Dashboard",
     icon: LayoutDashboardIcon,
-    page: "dashboard",
+    path: "/dashboard",
   },
   {
     title: "Students",
     icon: UsersIcon,
-    page: "students",
+    path: "/students",
   },
   {
     title: "Teachers",
     icon: UsersIcon,
-    page: "teachers",
+    path: "/teachers",
   },
   {
     title: "Classes",
     icon: BookOpenIcon,
-    page: "classes",
+    path: "/classes",
   },
   {
     title: "Attendance",
     icon: ClipboardListIcon,
-    page: "attendance",
+    path: "/attendance",
   },
   {
     title: "Settings",
     icon: SettingsIcon,
-    page: "settings",
+    path: "/settings",
   },
 ]
 
-export function Sidebar({ activePage, onPageChange }: SidebarProps) {
+export function Sidebar({ user }: SidebarProps) {
   const [isMobileOpen, setIsMobileOpen] = React.useState(false)
+  const logout = useAuthStore((state) => state.logout)
 
   return (
     <>
@@ -76,24 +93,23 @@ export function Sidebar({ activePage, onPageChange }: SidebarProps) {
           <nav className="flex-1 space-y-1 p-4">
             {menuItems.map((item) => {
               const Icon = item.icon
-              const isActive = activePage === item.page
               
               return (
-                <button
-                  key={item.page}
-                  onClick={() => {
-                    onPageChange(item.page)
-                    setIsMobileOpen(false)
-                  }}
-                  className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-                    isActive
-                      ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                  }`}
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => setIsMobileOpen(false)}
+                  className={({ isActive }) =>
+                    `flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+                      isActive
+                        ? "bg-primary text-primary-foreground"
+                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    }`
+                  }
                 >
                   <Icon className="h-5 w-5" />
                   {item.title}
-                </button>
+                </NavLink>
               )
             })}
           </nav>
@@ -102,12 +118,19 @@ export function Sidebar({ activePage, onPageChange }: SidebarProps) {
           <div className="border-t p-4">
             <div className="flex items-center gap-3 rounded-lg bg-muted px-3 py-2">
               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                A
+                {user?.fullName?.charAt(0).toUpperCase() || "U"}
               </div>
               <div className="flex-1 text-sm">
-                <p className="font-medium">Admin User</p>
-                <p className="text-xs text-muted-foreground">admin@school.edu</p>
+                <p className="font-medium">{user?.fullName || "User"}</p>
+                <p className="text-xs text-muted-foreground">{user?.email || ""}</p>
               </div>
+              <button
+                onClick={logout}
+                className="rounded-md p-1.5 text-muted-foreground hover:bg-background hover:text-foreground"
+                title="Logout"
+              >
+                <LogOutIcon className="h-4 w-4" />
+              </button>
             </div>
           </div>
         </div>
