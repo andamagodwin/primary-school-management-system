@@ -1,14 +1,19 @@
-import { useState, useRef } from "react"
-import { useNavigate } from "react-router-dom"
+import { useState, useRef, useEffect } from "react"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import { ArrowLeftIcon, CheckCircleIcon, CameraIcon, Loader2Icon, UserIcon } from "lucide-react"
-import { createStudent } from "@/lib/students"
+import { createStudent, getStudents, updateStudent, type Student } from "@/lib/students"
 import { uploadFile } from "@/lib/storage"
 import type { UploadProgress } from "appwrite"
 
 export default function AddStudentPage() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const studentId = searchParams.get("id")
+  const isEditMode = !!studentId
+
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
   const [showSuccess, setShowSuccess] = useState(false)
   const [uploadError, setUploadError] = useState("")
@@ -28,6 +33,46 @@ export default function AddStudentPage() {
     address: "",
     medicalInfo: "",
   })
+
+  // Load student data when in edit mode
+  useEffect(() => {
+    const loadStudentData = async () => {
+      if (!studentId) return
+
+      setIsLoading(true)
+      try {
+        const students = await getStudents()
+        const student = students.find((s: Student) => s.$id === studentId)
+        
+        if (student) {
+          setFormData({
+            firstName: student.firstName,
+            lastName: student.lastName,
+            dateOfBirth: student.dateOfBirth,
+            gender: student.gender,
+            grade: student.grade,
+            parentName: student.parentName,
+            parentEmail: student.parentEmail || "",
+            parentPhone: student.parentPhone,
+            address: student.address || "",
+            medicalInfo: student.medicalInfo || "",
+          })
+          
+          if (student.avatar) {
+            setPreviewUrl(student.avatar)
+            setAvatarUrl(student.avatar)
+          }
+        }
+      } catch (error) {
+        console.error("Error loading student:", error)
+        setUploadError("Failed to load student data")
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadStudentData()
+  }, [studentId])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -72,8 +117,7 @@ export default function AddStudentPage() {
     setUploadError("")
 
     try {
-      // Create student in database
-      await createStudent({
+      const studentData = {
         firstName: formData.firstName,
         lastName: formData.lastName,
         dateOfBirth: formData.dateOfBirth,
@@ -85,7 +129,15 @@ export default function AddStudentPage() {
         parentPhone: formData.parentPhone,
         address: formData.address || undefined,
         medicalInfo: formData.medicalInfo || undefined,
-      })
+      }
+
+      if (isEditMode && studentId) {
+        // Update existing student
+        await updateStudent(studentId, studentData)
+      } else {
+        // Create new student
+        await createStudent(studentData)
+      }
 
       setIsSubmitting(false)
       setShowSuccess(true)
@@ -113,10 +165,21 @@ export default function AddStudentPage() {
       }, 2000)
     } catch (error) {
       setIsSubmitting(false)
-      const errorMessage = error instanceof Error ? error.message : "Failed to create student"
+      const errorMessage = error instanceof Error ? error.message : `Failed to ${isEditMode ? 'update' : 'create'} student`
       setUploadError(errorMessage)
-      console.error("Error creating student:", error)
+      console.error(`Error ${isEditMode ? 'updating' : 'creating'} student:`, error)
     }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex h-96 items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <Loader2Icon className="h-8 w-8 animate-spin text-muted-foreground" />
+          <p className="text-sm text-muted-foreground">Loading student data...</p>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -130,9 +193,11 @@ export default function AddStudentPage() {
           <ArrowLeftIcon className="h-5 w-5" />
         </button>
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Add New Student</h2>
+          <h2 className="text-3xl font-bold tracking-tight">
+            {isEditMode ? 'Edit Student' : 'Add New Student'}
+          </h2>
           <p className="text-muted-foreground">
-            Fill in the student information below
+            {isEditMode ? 'Update the student information below' : 'Fill in the student information below'}
           </p>
         </div>
       </div>
@@ -141,7 +206,9 @@ export default function AddStudentPage() {
       {showSuccess && (
         <div className="flex items-center gap-3 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-green-800 dark:border-green-800 dark:bg-green-950 dark:text-green-200">
           <CheckCircleIcon className="h-5 w-5" />
-          <p className="font-medium">Student added successfully!</p>
+          <p className="font-medium">
+            Student {isEditMode ? 'updated' : 'added'} successfully!
+          </p>
         </div>
       )}
 
@@ -408,7 +475,10 @@ export default function AddStudentPage() {
               disabled={isSubmitting}
               className="rounded-md bg-primary px-6 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
             >
-              {isSubmitting ? "Adding Student..." : "Add Student"}
+              {isSubmitting 
+                ? (isEditMode ? "Updating Student..." : "Adding Student...") 
+                : (isEditMode ? "Update Student" : "Add Student")
+              }
             </button>
             <button
               type="button"

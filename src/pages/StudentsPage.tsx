@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { PlusIcon, SearchIcon, PhoneIcon, Loader2Icon, UserIcon } from "lucide-react"
+import { PlusIcon, SearchIcon, PhoneIcon, Loader2Icon, UserIcon, PencilIcon } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { getStudents, type Student } from "@/lib/students"
 
@@ -168,7 +168,15 @@ export default function StudentsPage() {
                       </div>
                     </td>
                     <td className="px-4 py-3 text-sm">
-                      <button className="text-primary hover:underline">View</button>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => navigate(`/students/add?id=${student.$id}`)}
+                          className="flex items-center gap-1 text-primary hover:underline"
+                        >
+                          <PencilIcon className="h-3 w-3" />
+                          Edit
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
