@@ -96,7 +96,8 @@ export default function AddStudentPage() {
     try {
       // Upload file to Appwrite Storage
       const { url } = await uploadFile(file, (progress: UploadProgress) => {
-        const percentage = Math.round((progress.$id.length / progress.chunksTotal) * 100)
+        // Calculate percentage based on chunks uploaded
+        const percentage = Math.round((progress.chunksUploaded / progress.chunksTotal) * 100)
         setUploadProgress(percentage)
       })
 

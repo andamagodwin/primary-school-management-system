@@ -62,8 +62,8 @@ export default function ProfilePage() {
     try {
       // Upload file to Appwrite Storage
       const { fileId, url } = await uploadFile(file, (progress: UploadProgress) => {
-        // Calculate percentage
-        const percentage = Math.round((progress.$id.length / progress.chunksTotal) * 100)
+        // Calculate percentage based on chunks uploaded
+        const percentage = Math.round((progress.chunksUploaded / progress.chunksTotal) * 100)
         setUploadProgress(percentage)
       })
 
