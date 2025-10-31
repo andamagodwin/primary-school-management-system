@@ -29,7 +29,7 @@ interface AuthState {
   register: (email: string, password: string, name: string, userType: 'admin' | 'teacher' | 'staff' | 'parent') => Promise<void>
   logout: () => Promise<void>
   checkAuth: () => Promise<void>
-  updateUserProfile: (userId: string, data: Partial<User>) => Promise<void>
+  updateUserProfile: (userId: string, data: Partial<User>) => Promise<Models.Document | void>
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -206,14 +206,29 @@ export const useAuthStore = create<AuthState>()(
       },
 
       updateUserProfile: async (userId: string, data: Partial<User>) => {
-        const updatedUser = await databases.updateDocument(
-          DATABASE_ID,
-          USERS_COLLECTION_ID,
-          userId,
-          data
-        )
+        try {
+          console.log('Updating document:', {
+            databaseId: DATABASE_ID,
+            collectionId: USERS_COLLECTION_ID,
+            documentId: userId,
+            data: data
+          })
 
-        set({ user: updatedUser as unknown as User })
+          const updatedUser = await databases.updateDocument(
+            DATABASE_ID,
+            USERS_COLLECTION_ID,
+            userId,
+            data
+          )
+
+          console.log('Document updated successfully:', updatedUser)
+          set({ user: updatedUser as unknown as User })
+          
+          return updatedUser
+        } catch (error) {
+          console.error('Error updating user profile:', error)
+          throw error
+        }
       }
     }),
     {

@@ -7,6 +7,7 @@ import TeachersPage from '@/pages/TeachersPage'
 import ClassesPage from '@/pages/ClassesPage'
 import AttendancePage from '@/pages/AttendancePage'
 import SettingsPage from '@/pages/SettingsPage'
+import ProfilePage from '@/pages/ProfilePage'
 import { useAuthStore } from '@/store/authStore'
 
 export default function DashboardLayout() {
@@ -26,6 +27,7 @@ export default function DashboardLayout() {
             <Route path="/classes" element={<ClassesPage />} />
             <Route path="/attendance" element={<AttendancePage />} />
             <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </div>

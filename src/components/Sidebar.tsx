@@ -117,13 +117,29 @@ export function Sidebar({ user }: SidebarProps) {
           {/* Footer */}
           <div className="border-t p-4">
             <div className="flex items-center gap-3 rounded-lg bg-muted px-3 py-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                {user?.fullName?.charAt(0).toUpperCase() || "U"}
-              </div>
-              <div className="flex-1 text-sm">
-                <p className="font-medium">{user?.fullName || "User"}</p>
-                <p className="text-xs text-muted-foreground">{user?.email || ""}</p>
-              </div>
+              <NavLink
+                to="/profile"
+                onClick={() => setIsMobileOpen(false)}
+                className="flex flex-1 items-center gap-3 hover:opacity-80"
+              >
+                <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-primary text-primary-foreground">
+                  {user?.avatar ? (
+                    <img
+                      src={user.avatar}
+                      alt={user.fullName || "User"}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-sm font-medium">
+                      {user?.fullName?.charAt(0).toUpperCase() || "U"}
+                    </span>
+                  )}
+                </div>
+                <div className="flex-1 text-sm">
+                  <p className="font-medium">{user?.fullName || "User"}</p>
+                  <p className="text-xs text-muted-foreground">{user?.email || ""}</p>
+                </div>
+              </NavLink>
               <button
                 onClick={logout}
                 className="rounded-md p-1.5 text-muted-foreground hover:bg-background hover:text-foreground"
