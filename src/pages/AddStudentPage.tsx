@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
-import { ArrowLeftIcon, CheckCircleIcon, CameraIcon, Loader2Icon, UserIcon } from "lucide-react"
+import { ArrowLeftIcon, CameraIcon, Loader2Icon, UserIcon } from "lucide-react"
+import { toast } from "sonner"
 import { createStudent, getStudents, updateStudent, type Student } from "@/lib/students"
 import { uploadFile } from "@/lib/storage"
 import type { UploadProgress } from "appwrite"
@@ -15,7 +16,6 @@ export default function AddStudentPage() {
   const [isUploading, setIsUploading] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
-  const [showSuccess, setShowSuccess] = useState(false)
   const [uploadError, setUploadError] = useState("")
   const [previewUrl, setPreviewUrl] = useState("")
   const [avatarUrl, setAvatarUrl] = useState("")
@@ -135,39 +135,48 @@ export default function AddStudentPage() {
       if (isEditMode && studentId) {
         // Update existing student
         await updateStudent(studentId, studentData)
+        toast.success('Student updated successfully!', {
+          description: `${studentData.firstName} ${studentData.lastName} has been updated.`
+        })
       } else {
         // Create new student
         await createStudent(studentData)
+        toast.success('Student added successfully!', {
+          description: `${studentData.firstName} ${studentData.lastName} has been enrolled.`
+        })
       }
 
       setIsSubmitting(false)
-      setShowSuccess(true)
 
-      // Reset form
-      setFormData({
-        firstName: "",
-        lastName: "",
-        dateOfBirth: "",
-        gender: "",
-        grade: "",
-        parentName: "",
-        parentEmail: "",
-        parentPhone: "",
-        address: "",
-        medicalInfo: "",
-      })
-      setPreviewUrl("")
-      setAvatarUrl("")
+      // Reset form if adding new student
+      if (!isEditMode) {
+        setFormData({
+          firstName: "",
+          lastName: "",
+          dateOfBirth: "",
+          gender: "",
+          grade: "",
+          parentName: "",
+          parentEmail: "",
+          parentPhone: "",
+          address: "",
+          medicalInfo: "",
+        })
+        setPreviewUrl("")
+        setAvatarUrl("")
+      }
 
-      // Hide success message and redirect after 2 seconds
+      // Redirect after a short delay
       setTimeout(() => {
-        setShowSuccess(false)
         navigate("/students")
-      }, 2000)
+      }, 1500)
     } catch (error) {
       setIsSubmitting(false)
       const errorMessage = error instanceof Error ? error.message : `Failed to ${isEditMode ? 'update' : 'create'} student`
       setUploadError(errorMessage)
+      toast.error(`Failed to ${isEditMode ? 'update' : 'add'} student`, {
+        description: errorMessage
+      })
       console.error(`Error ${isEditMode ? 'updating' : 'creating'} student:`, error)
     }
   }
@@ -202,16 +211,6 @@ export default function AddStudentPage() {
           </p>
         </div>
       </div>
-
-      {/* Success Message */}
-      {showSuccess && (
-        <div className="flex items-center gap-3 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-green-800 dark:border-green-800 dark:bg-green-950 dark:text-green-200">
-          <CheckCircleIcon className="h-5 w-5" />
-          <p className="font-medium">
-            Student {isEditMode ? 'updated' : 'added'} successfully!
-          </p>
-        </div>
-      )}
 
       {/* Upload Error Message */}
       {uploadError && (

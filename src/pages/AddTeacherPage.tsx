@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
-import { ArrowLeftIcon, CheckCircleIcon, CameraIcon, Loader2Icon, UserIcon, XIcon } from "lucide-react"
+import { ArrowLeftIcon, CameraIcon, Loader2Icon, UserIcon, XIcon } from "lucide-react"
+import { toast } from "sonner"
 import { createTeacher, getTeachers, updateTeacher, type Teacher } from "@/lib/teachers"
 import { uploadFile } from "@/lib/storage"
 import type { UploadProgress } from "appwrite"
@@ -15,7 +16,6 @@ export default function AddTeacherPage() {
   const [isUploading, setIsUploading] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
-  const [showSuccess, setShowSuccess] = useState(false)
   const [uploadError, setUploadError] = useState("")
   const [previewUrl, setPreviewUrl] = useState("")
   const [avatarUrl, setAvatarUrl] = useState("")
@@ -189,23 +189,30 @@ export default function AddTeacherPage() {
       if (isEditMode && teacherId) {
         // Update existing teacher
         await updateTeacher(teacherId, teacherData)
+        toast.success('Teacher updated successfully!', {
+          description: `${teacherData.firstName} ${teacherData.lastName} has been updated.`
+        })
       } else {
         // Create new teacher
         await createTeacher(teacherData)
+        toast.success('Teacher added successfully!', {
+          description: `${teacherData.firstName} ${teacherData.lastName} has been added to the staff.`
+        })
       }
 
       setIsSubmitting(false)
-      setShowSuccess(true)
 
-      // Hide success message and redirect after 2 seconds
+      // Redirect after a short delay
       setTimeout(() => {
-        setShowSuccess(false)
         navigate("/teachers")
-      }, 2000)
+      }, 1500)
     } catch (error) {
       setIsSubmitting(false)
       const errorMessage = error instanceof Error ? error.message : `Failed to ${isEditMode ? 'update' : 'create'} teacher`
       setUploadError(errorMessage)
+      toast.error(`Failed to ${isEditMode ? 'update' : 'add'} teacher`, {
+        description: errorMessage
+      })
       console.error(`Error ${isEditMode ? 'updating' : 'creating'} teacher:`, error)
     }
   }
@@ -240,16 +247,6 @@ export default function AddTeacherPage() {
           </p>
         </div>
       </div>
-
-      {/* Success Message */}
-      {showSuccess && (
-        <div className="flex items-center gap-3 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-green-800 dark:border-green-800 dark:bg-green-950 dark:text-green-200">
-          <CheckCircleIcon className="h-5 w-5" />
-          <p className="font-medium">
-            Teacher {isEditMode ? 'updated' : 'added'} successfully!
-          </p>
-        </div>
-      )}
 
       {/* Error Message */}
       {uploadError && (

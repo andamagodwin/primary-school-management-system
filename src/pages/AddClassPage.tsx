@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
-import { ArrowLeftIcon, CheckCircleIcon, Loader2Icon, XIcon } from "lucide-react"
+import { ArrowLeftIcon, Loader2Icon, XIcon } from "lucide-react"
+import { toast } from "sonner"
 import { createClass, getClasses, updateClass, type Class } from "@/lib/classes"
 import { getTeachers, type Teacher } from "@/lib/teachers"
 
@@ -12,7 +13,6 @@ export default function AddClassPage() {
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [showSuccess, setShowSuccess] = useState(false)
   const [error, setError] = useState("")
   const [teachers, setTeachers] = useState<Teacher[]>([])
 
@@ -124,23 +124,30 @@ export default function AddClassPage() {
       if (isEditMode && classId) {
         // Update existing class
         await updateClass(classId, classData)
+        toast.success('Class updated successfully!', {
+          description: `${classData.name} has been updated.`
+        })
       } else {
         // Create new class
         await createClass(classData)
+        toast.success('Class created successfully!', {
+          description: `${classData.name} has been created.`
+        })
       }
 
       setIsSubmitting(false)
-      setShowSuccess(true)
 
-      // Hide success message and redirect after 2 seconds
+      // Redirect after a short delay
       setTimeout(() => {
-        setShowSuccess(false)
         navigate("/classes")
-      }, 2000)
+      }, 1500)
     } catch (err) {
       setIsSubmitting(false)
       const errorMessage = err instanceof Error ? err.message : `Failed to ${isEditMode ? 'update' : 'create'} class`
       setError(errorMessage)
+      toast.error(`Failed to ${isEditMode ? 'update' : 'create'} class`, {
+        description: errorMessage
+      })
       console.error(`Error ${isEditMode ? 'updating' : 'creating'} class:`, err)
     }
   }
@@ -175,16 +182,6 @@ export default function AddClassPage() {
           </p>
         </div>
       </div>
-
-      {/* Success Message */}
-      {showSuccess && (
-        <div className="flex items-center gap-3 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-green-800 dark:border-green-800 dark:bg-green-950 dark:text-green-200">
-          <CheckCircleIcon className="h-5 w-5" />
-          <p className="font-medium">
-            Class {isEditMode ? 'updated' : 'created'} successfully!
-          </p>
-        </div>
-      )}
 
       {/* Error Message */}
       {error && (
