@@ -6,6 +6,7 @@ import AddStudentPage from '@/pages/AddStudentPage'
 import TeachersPage from '@/pages/TeachersPage'
 import AddTeacherPage from '@/pages/AddTeacherPage'
 import ClassesPage from '@/pages/ClassesPage'
+import AddClassPage from '@/pages/AddClassPage'
 import AttendancePage from '@/pages/AttendancePage'
 import SettingsPage from '@/pages/SettingsPage'
 import ProfilePage from '@/pages/ProfilePage'
@@ -27,6 +28,7 @@ export default function DashboardLayout() {
             <Route path="/teachers" element={<TeachersPage />} />
             <Route path="/teachers/add" element={<AddTeacherPage />} />
             <Route path="/classes" element={<ClassesPage />} />
+            <Route path="/classes/add" element={<AddClassPage />} />
             <Route path="/attendance" element={<AttendancePage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/profile" element={<ProfilePage />} />

@@ -17,4 +17,5 @@ export const DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID || '';
 export const USERS_COLLECTION_ID = import.meta.env.VITE_APPWRITE_USERS_COLLECTION_ID || '';
 export const STUDENTS_COLLECTION_ID = import.meta.env.VITE_APPWRITE_STUDENTS_COLLECTION_ID || '';
 export const TEACHERS_COLLECTION_ID = import.meta.env.VITE_APPWRITE_TEACHERS_COLLECTION_ID || '';
+export const CLASSES_COLLECTION_ID = import.meta.env.VITE_APPWRITE_CLASSES_COLLECTION_ID || '';
 export const STORAGE_BUCKET_ID = import.meta.env.VITE_APPWRITE_STORAGE_BUCKET_ID || '';
