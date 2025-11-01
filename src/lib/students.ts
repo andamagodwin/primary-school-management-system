@@ -12,6 +12,8 @@ export interface Student {
   gender: 'Male' | 'Female'
   grade: 'P1' | 'P2' | 'P3' | 'P4' | 'P5' | 'P6' | 'P7'
   avatar?: string
+  classId?: string // Reference to class document
+  className?: string // Denormalized for quick display
   parentName: string
   parentEmail?: string
   parentPhone: string
@@ -31,6 +33,8 @@ export interface CreateStudentData {
   gender: 'Male' | 'Female'
   grade: 'P1' | 'P2' | 'P3' | 'P4' | 'P5' | 'P6' | 'P7'
   avatar?: string
+  classId?: string
+  className?: string
   parentName: string
   parentEmail?: string
   parentPhone: string
@@ -100,6 +104,8 @@ export async function createStudent(data: CreateStudentData): Promise<Student> {
       gender: data.gender,
       grade: data.grade,
       avatar: data.avatar || null,
+      classId: data.classId || null,
+      className: data.className || null,
       parentName: data.parentName,
       parentEmail: data.parentEmail || null,
       parentPhone: data.parentPhone,

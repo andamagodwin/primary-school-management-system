@@ -38,7 +38,6 @@ export default function ClassesPage() {
     const searchLower = searchQuery.toLowerCase()
     const matchesSearch = (
       cls.name.toLowerCase().includes(searchLower) ||
-      cls.section.toLowerCase().includes(searchLower) ||
       cls.classTeacherName?.toLowerCase().includes(searchLower) ||
       cls.roomNumber?.toLowerCase().includes(searchLower)
     )

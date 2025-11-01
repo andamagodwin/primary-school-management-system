@@ -6,9 +6,8 @@ export interface Class {
   $createdAt: string
   $updatedAt: string
   classId: string
-  name: string // e.g., "Primary 1A", "P1A"
+  name: string // e.g., "Primary 1", "P1"
   grade: 'P1' | 'P2' | 'P3' | 'P4' | 'P5' | 'P6' | 'P7'
-  section: string // e.g., "A", "B", "C"
   classTeacherId?: string // Reference to teacher document ID
   classTeacherName?: string // Denormalized for easier display
   roomNumber?: string
@@ -26,7 +25,6 @@ export interface Class {
 export interface CreateClassData {
   name: string
   grade: 'P1' | 'P2' | 'P3' | 'P4' | 'P5' | 'P6' | 'P7'
-  section: string
   classTeacherId?: string
   classTeacherName?: string
   roomNumber?: string
@@ -58,7 +56,6 @@ export async function createClass(data: CreateClassData): Promise<Class> {
         classId,
         name: data.name,
         grade: data.grade,
-        section: data.section,
         classTeacherId: data.classTeacherId,
         classTeacherName: data.classTeacherName,
         roomNumber: data.roomNumber,
@@ -91,7 +88,6 @@ export async function getClasses(): Promise<Class[]> {
       CLASSES_COLLECTION_ID,
       [
         Query.orderAsc('grade'),
-        Query.orderAsc('section'),
         Query.limit(100)
       ]
     )

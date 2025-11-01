@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom"
 import { ArrowLeftIcon, CameraIcon, Loader2Icon, UserIcon } from "lucide-react"
 import { toast } from "sonner"
 import { createStudent, getStudents, updateStudent, type Student } from "@/lib/students"
+import { getClasses, type Class } from "@/lib/classes"
 import { uploadFile } from "@/lib/storage"
 import type { UploadProgress } from "appwrite"
 
@@ -19,6 +20,7 @@ export default function AddStudentPage() {
   const [uploadError, setUploadError] = useState("")
   const [previewUrl, setPreviewUrl] = useState("")
   const [avatarUrl, setAvatarUrl] = useState("")
+  const [classes, setClasses] = useState<Class[]>([])
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const [formData, setFormData] = useState({
@@ -27,12 +29,26 @@ export default function AddStudentPage() {
     dateOfBirth: "",
     gender: "",
     grade: "",
+    classId: "",
     parentName: "",
     parentEmail: "",
     parentPhone: "",
     address: "",
     medicalInfo: "",
   })
+
+  // Load classes
+  useEffect(() => {
+    const fetchClasses = async () => {
+      try {
+        const data = await getClasses()
+        setClasses(data.filter(c => c.status === 'active'))
+      } catch (err) {
+        console.error("Error fetching classes:", err)
+      }
+    }
+    fetchClasses()
+  }, [])
 
   // Load student data when in edit mode
   useEffect(() => {
@@ -51,6 +67,7 @@ export default function AddStudentPage() {
             dateOfBirth: student.dateOfBirth,
             gender: student.gender,
             grade: student.grade,
+            classId: student.classId || "",
             parentName: student.parentName,
             parentEmail: student.parentEmail || "",
             parentPhone: student.parentPhone,
@@ -118,6 +135,9 @@ export default function AddStudentPage() {
     setUploadError("")
 
     try {
+      // Find selected class to get class name
+      const selectedClass = classes.find(c => c.$id === formData.classId)
+      
       const studentData = {
         firstName: formData.firstName,
         lastName: formData.lastName,
@@ -130,6 +150,8 @@ export default function AddStudentPage() {
         parentPhone: formData.parentPhone,
         address: formData.address || undefined,
         medicalInfo: formData.medicalInfo || undefined,
+        classId: formData.classId || undefined,
+        className: selectedClass?.name,
       }
 
       if (isEditMode && studentId) {
@@ -156,6 +178,7 @@ export default function AddStudentPage() {
           dateOfBirth: "",
           gender: "",
           grade: "",
+          classId: "",
           parentName: "",
           parentEmail: "",
           parentPhone: "",
@@ -376,6 +399,33 @@ export default function AddStudentPage() {
                   <option value="P6">P6</option>
                   <option value="P7">P7</option>
                 </select>
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="classId" className="text-sm font-medium">
+                  Assign to Class
+                </label>
+                <select
+                  id="classId"
+                  name="classId"
+                  value={formData.classId}
+                  onChange={handleChange}
+                  className="h-10 w-full rounded-md border bg-background px-3 text-sm"
+                >
+                  <option value="">No class assigned</option>
+                  {classes
+                    .filter(cls => formData.grade ? cls.name.startsWith(formData.grade) : true)
+                    .map(cls => (
+                      <option key={cls.$id} value={cls.$id}>
+                        {cls.name} ({cls.currentStudents}/{cls.capacity})
+                      </option>
+                    ))}
+                </select>
+                {formData.grade && classes.filter(cls => cls.name.startsWith(formData.grade)).length === 0 && (
+                  <p className="text-xs text-muted-foreground">
+                    No classes available for {formData.grade}
+                  </p>
+                )}
               </div>
 
               <div className="space-y-2">

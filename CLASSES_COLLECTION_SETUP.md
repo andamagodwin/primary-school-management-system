@@ -14,7 +14,6 @@ Create the following attributes in your Appwrite classes collection:
 | classId | String | 255 | Yes | - | No |
 | name | String | 100 | Yes | - | No |
 | grade | Enum | - | Yes | - | No |
-| section | String | 5 | Yes | - | No |
 | classTeacherId | String | 255 | No | - | No |
 | classTeacherName | String | 200 | No | - | No |
 | roomNumber | String | 20 | No | - | No |
@@ -58,32 +57,22 @@ Create these indexes for better query performance:
    - Attribute: grade
    - Order: ASC
 
-2. **section_index**
-   - Type: Key
-   - Attribute: section
-   - Order: ASC
-
-3. **grade_section_index**
-   - Type: Key
-   - Attributes: grade, section
-   - Order: ASC, ASC
-
-4. **teacher_index**
+2. **teacher_index**
    - Type: Key
    - Attribute: classTeacherId
    - Order: ASC
 
-5. **academic_year_index**
+3. **academic_year_index**
    - Type: Key
    - Attribute: academicYear
    - Order: DESC
 
-6. **status_index**
+4. **status_index**
    - Type: Key
    - Attribute: status
    - Order: ASC
 
-7. **created_index**
+5. **created_index**
    - Type: Key
    - Attribute: $createdAt
    - Order: DESC
@@ -109,24 +98,22 @@ Delete: role:admin
 
 ## Notes
 
-1. **Class Naming**: Typically follows format like "Primary 1A", "P1A", etc.
+1. **Class Naming**: Class names should clearly identify the grade level (e.g., "Primary 1", "P1", "Grade 1")
 
 2. **Grade**: Standard primary levels P1 through P7
 
-3. **Section**: Usually single letters (A, B, C, etc.) to differentiate parallel classes
-
-4. **Class Teacher**: 
+3. **Class Teacher**: 
    - `classTeacherId`: Reference to the teacher's document ID
    - `classTeacherName`: Denormalized for quick display without joins
 
-5. **Capacity vs Current Students**:
+4. **Capacity vs Current Students**:
    - `capacity`: Maximum number of students the class can hold
    - `currentStudents`: Actual number of enrolled students (can be auto-calculated)
 
-6. **Subjects Array**: List of subjects taught in this class
+5. **Subjects Array**: List of subjects taught in this class
    - Example: ["Mathematics", "English", "Science", "Social Studies"]
 
-7. **Schedule**: Optional JSON string containing class timetable
+6. **Schedule**: Optional JSON string containing class timetable
    ```json
    {
      "Monday": {
@@ -136,12 +123,12 @@ Delete: role:admin
    }
    ```
 
-8. **Academic Year**: Year when the class is active (e.g., "2025")
+7. **Academic Year**: Year when the class is active (e.g., "2025")
 
-9. **Term**: School term/semester (Term1, Term2, Term3)
+8. **Term**: School term/semester (Term1, Term2, Term3)
    - Note: Values have no spaces to match Appwrite enum format
 
-10. **Status Values**:
+9. **Status Values**:
     - `active`: Currently running class
     - `inactive`: Temporarily paused
     - `completed`: Class has finished (end of year)

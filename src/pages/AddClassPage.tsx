@@ -19,7 +19,6 @@ export default function AddClassPage() {
   const [formData, setFormData] = useState({
     name: "",
     grade: "",
-    section: "",
     classTeacherId: "",
     roomNumber: "",
     capacity: "",
@@ -58,7 +57,6 @@ export default function AddClassPage() {
           setFormData({
             name: classData.name,
             grade: classData.grade,
-            section: classData.section,
             classTeacherId: classData.classTeacherId || "",
             roomNumber: classData.roomNumber || "",
             capacity: classData.capacity.toString(),
@@ -110,7 +108,6 @@ export default function AddClassPage() {
       const classData = {
         name: formData.name,
         grade: formData.grade as 'P1' | 'P2' | 'P3' | 'P4' | 'P5' | 'P6' | 'P7',
-        section: formData.section,
         classTeacherId: formData.classTeacherId || undefined,
         classTeacherName: selectedTeacher ? `${selectedTeacher.firstName} ${selectedTeacher.lastName}` : undefined,
         roomNumber: formData.roomNumber || undefined,
@@ -234,23 +231,6 @@ export default function AddClassPage() {
                   <option value="P6">P6</option>
                   <option value="P7">P7</option>
                 </select>
-              </div>
-
-              <div>
-                <label htmlFor="section" className="mb-2 block text-sm font-medium">
-                  Section <span className="text-red-500">*</span>
-                </label>
-                <input
-                  id="section"
-                  name="section"
-                  type="text"
-                  value={formData.section}
-                  onChange={handleChange}
-                  required
-                  placeholder="e.g., A, B, C"
-                  maxLength={1}
-                  className="w-full rounded-md border bg-background px-3 py-2 text-sm uppercase"
-                />
               </div>
 
               <div>
