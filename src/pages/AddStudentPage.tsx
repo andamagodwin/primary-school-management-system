@@ -414,14 +414,14 @@ export default function AddStudentPage() {
                 >
                   <option value="">No class assigned</option>
                   {classes
-                    .filter(cls => formData.grade ? cls.name.startsWith(formData.grade) : true)
+                    .filter(cls => formData.grade ? cls.grade === formData.grade : true)
                     .map(cls => (
                       <option key={cls.$id} value={cls.$id}>
                         {cls.name} ({cls.currentStudents}/{cls.capacity})
                       </option>
                     ))}
                 </select>
-                {formData.grade && classes.filter(cls => cls.name.startsWith(formData.grade)).length === 0 && (
+                {formData.grade && classes.filter(cls => cls.grade === formData.grade).length === 0 && (
                   <p className="text-xs text-muted-foreground">
                     No classes available for {formData.grade}
                   </p>

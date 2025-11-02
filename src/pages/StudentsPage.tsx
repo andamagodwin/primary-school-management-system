@@ -132,6 +132,7 @@ export default function StudentsPage() {
                   <th className="px-4 py-3 text-left text-sm font-medium">Admission No.</th>
                   <th className="px-4 py-3 text-left text-sm font-medium">Name</th>
                   <th className="px-4 py-3 text-left text-sm font-medium">Grade</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium">Class</th>
                   <th className="px-4 py-3 text-left text-sm font-medium">Age</th>
                   <th className="px-4 py-3 text-left text-sm font-medium">Parent/Guardian</th>
                   <th className="px-4 py-3 text-left text-sm font-medium">Contact</th>
@@ -159,6 +160,15 @@ export default function StudentsPage() {
                       {student.firstName} {student.lastName}
                     </td>
                     <td className="px-4 py-3 text-sm">{student.grade}</td>
+                    <td className="px-4 py-3 text-sm">
+                      {student.className ? (
+                        <span className="inline-flex items-center rounded-full bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+                          {student.className}
+                        </span>
+                      ) : (
+                        <span className="text-muted-foreground">Not assigned</span>
+                      )}
+                    </td>
                     <td className="px-4 py-3 text-sm">{calculateAge(student.dateOfBirth)}</td>
                     <td className="px-4 py-3 text-sm">{student.parentName}</td>
                     <td className="px-4 py-3 text-sm">

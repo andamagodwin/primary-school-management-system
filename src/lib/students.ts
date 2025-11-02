@@ -1,5 +1,5 @@
 import { ID } from 'appwrite'
-import { databases, DATABASE_ID, STUDENTS_COLLECTION_ID, account } from './appwrite'
+import { databases, DATABASE_ID, STUDENTS_COLLECTION_ID, CLASSES_COLLECTION_ID, account } from './appwrite'
 
 export interface Student {
   $id: string
@@ -129,6 +129,33 @@ export async function createStudent(data: CreateStudentData): Promise<Student> {
     
     console.log('Student created successfully:', student)
     
+    // If student is assigned to a class, increment the class student count
+    if (data.classId) {
+      try {
+        // Get current class data
+        const classDoc = await databases.getDocument(
+          DATABASE_ID,
+          CLASSES_COLLECTION_ID,
+          data.classId
+        )
+        
+        // Increment currentStudents
+        await databases.updateDocument(
+          DATABASE_ID,
+          CLASSES_COLLECTION_ID,
+          data.classId,
+          {
+            currentStudents: (classDoc.currentStudents || 0) + 1
+          }
+        )
+        
+        console.log('Class student count updated')
+      } catch (error) {
+        console.error('Error updating class student count:', error)
+        // Don't throw - student was created successfully
+      }
+    }
+    
     return student as unknown as Student
   } catch (error) {
     console.error('Error creating student:', error)
@@ -179,12 +206,70 @@ export async function updateStudent(
   data: Partial<CreateStudentData>
 ): Promise<Student> {
   try {
+    // Get current student data to check for class change
+    const currentStudent = await databases.getDocument(
+      DATABASE_ID,
+      STUDENTS_COLLECTION_ID,
+      documentId
+    ) as unknown as Student
+    
     const student = await databases.updateDocument(
       DATABASE_ID,
       STUDENTS_COLLECTION_ID,
       documentId,
       data
     )
+    
+    // Handle class change
+    const oldClassId = currentStudent.classId
+    const newClassId = data.classId
+    
+    // If class changed, update both old and new class counts
+    if (oldClassId !== newClassId) {
+      // Decrement old class count
+      if (oldClassId) {
+        try {
+          const oldClassDoc = await databases.getDocument(
+            DATABASE_ID,
+            CLASSES_COLLECTION_ID,
+            oldClassId
+          )
+          
+          await databases.updateDocument(
+            DATABASE_ID,
+            CLASSES_COLLECTION_ID,
+            oldClassId,
+            {
+              currentStudents: Math.max(0, (oldClassDoc.currentStudents || 0) - 1)
+            }
+          )
+        } catch (error) {
+          console.error('Error decrementing old class count:', error)
+        }
+      }
+      
+      // Increment new class count
+      if (newClassId) {
+        try {
+          const newClassDoc = await databases.getDocument(
+            DATABASE_ID,
+            CLASSES_COLLECTION_ID,
+            newClassId
+          )
+          
+          await databases.updateDocument(
+            DATABASE_ID,
+            CLASSES_COLLECTION_ID,
+            newClassId,
+            {
+              currentStudents: (newClassDoc.currentStudents || 0) + 1
+            }
+          )
+        } catch (error) {
+          console.error('Error incrementing new class count:', error)
+        }
+      }
+    }
     
     return student as unknown as Student
   } catch (error) {
@@ -198,11 +283,43 @@ export async function updateStudent(
  */
 export async function deleteStudent(documentId: string): Promise<void> {
   try {
+    // Get student data to check if assigned to a class
+    const student = await databases.getDocument(
+      DATABASE_ID,
+      STUDENTS_COLLECTION_ID,
+      documentId
+    ) as unknown as Student
+    
     await databases.deleteDocument(
       DATABASE_ID,
       STUDENTS_COLLECTION_ID,
       documentId
     )
+    
+    // If student was assigned to a class, decrement the class count
+    if (student.classId) {
+      try {
+        const classDoc = await databases.getDocument(
+          DATABASE_ID,
+          CLASSES_COLLECTION_ID,
+          student.classId
+        )
+        
+        await databases.updateDocument(
+          DATABASE_ID,
+          CLASSES_COLLECTION_ID,
+          student.classId,
+          {
+            currentStudents: Math.max(0, (classDoc.currentStudents || 0) - 1)
+          }
+        )
+        
+        console.log('Class student count decremented')
+      } catch (error) {
+        console.error('Error decrementing class count:', error)
+        // Don't throw - student was deleted successfully
+      }
+    }
   } catch (error) {
     console.error('Error deleting student:', error)
     throw error

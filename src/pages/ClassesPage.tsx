@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { BookOpenIcon, PlusIcon, Loader2Icon, PencilIcon, UsersIcon } from "lucide-react"
+import { BookOpenIcon, PlusIcon, Loader2Icon, PencilIcon, UsersIcon,Presentation } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { getClasses, type Class } from "@/lib/classes"
 
@@ -133,8 +133,8 @@ export default function ClassesPage() {
               <div className="border-b p-4">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                      <BookOpenIcon className="h-5 w-5 text-primary" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg">
+                      <Presentation className="h-5 w-5 text-primary" />
                     </div>
                     <div>
                       <h3 className="font-semibold">{cls.name}</h3>
