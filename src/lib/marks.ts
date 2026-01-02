@@ -1,5 +1,5 @@
 import { ID, Query } from 'appwrite'
-import { databases, DATABASE_ID, account } from './appwrite'
+import { databases, DATABASE_ID, MARKS_TABLE_ID, USERS_TABLE_ID, account } from './appwrite'
 
 export interface Mark {
   $id: string
@@ -57,7 +57,7 @@ export function calculateGrade(marks: number, maxMarks: number): string {
 export async function createMark(data: CreateMarkData): Promise<Mark> {
   try {
     const currentUser = await account.get()
-    const userProfile = await databases.listDocuments(DATABASE_ID, 'users', [])
+    const userProfile = await databases.listDocuments(DATABASE_ID, USERS_TABLE_ID, [])
     const user = userProfile.documents.find(doc => doc.userId === currentUser.$id)
     const createdByName = user?.fullName || currentUser.name || 'Unknown'
 
@@ -85,7 +85,7 @@ export async function createMark(data: CreateMarkData): Promise<Mark> {
 
     const mark = await databases.createDocument(
       DATABASE_ID,
-      'marks',
+      MARKS_TABLE_ID,
       ID.unique(),
       markData
     )
@@ -145,7 +145,7 @@ export async function getMarks(filters?: {
 
     const response = await databases.listDocuments(
       DATABASE_ID,
-      'marks',
+      MARKS_TABLE_ID,
       queries
     )
 
@@ -173,7 +173,7 @@ export async function updateMark(
 
     const mark = await databases.updateDocument(
       DATABASE_ID,
-      'marks',
+      MARKS_TABLE_ID,
       documentId,
       updateData
     )

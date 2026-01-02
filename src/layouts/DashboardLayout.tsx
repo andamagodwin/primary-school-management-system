@@ -19,6 +19,13 @@ import MarksEntryPage from '@/pages/MarksEntryPage'
 import ExamsUploadPage from '@/pages/ExamsUploadPage'
 import LessonPlansPage from '@/pages/LessonPlansPage'
 import MyStudentsPage from '@/pages/MyStudentsPage'
+import DOSDashboardPage from '@/pages/DOSDashboardPage'
+import ExamsManagementPage from '@/pages/ExamsManagementPage'
+import StudentResultsPage from '@/pages/StudentResultsPage'
+import AttendanceOverviewPage from '@/pages/AttendanceOverviewPage'
+import StaffApplicationsPage from '@/pages/StaffApplicationsPage'
+import SportsEventsPage from '@/pages/SportsEventsPage'
+import ReportCommentsPage from '@/pages/ReportCommentsPage'
 import { useAuthStore } from '@/store/authStore'
 
 export default function DashboardLayout() {
@@ -51,6 +58,13 @@ export default function DashboardLayout() {
             <Route path="/exams" element={<ExamsUploadPage />} />
             <Route path="/lesson-plans" element={<LessonPlansPage />} />
             <Route path="/my-students" element={<MyStudentsPage />} />
+            {/* DOS routes */}
+            <Route path="/dos/exams" element={<ExamsManagementPage />} />
+            <Route path="/dos/results" element={<StudentResultsPage />} />
+            <Route path="/dos/attendance" element={<AttendanceOverviewPage />} />
+            <Route path="/dos/applications" element={<StaffApplicationsPage />} />
+            <Route path="/dos/sports-events" element={<SportsEventsPage />} />
+            <Route path="/dos/report-comments" element={<ReportCommentsPage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />

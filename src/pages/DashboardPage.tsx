@@ -1,6 +1,7 @@
 import { TrendingUpIcon, TrendingDownIcon, UsersIcon, BookOpenIcon, CheckCircle2Icon, ClipboardListIcon } from "lucide-react"
 import { useAuthStore } from "@/store/authStore"
 import TeacherDashboardPage from "./TeacherDashboardPage"
+import DOSDashboardPage from "./DOSDashboardPage"
 
 export default function DashboardPage() {
   const user = useAuthStore((state) => state.user)
@@ -8,6 +9,11 @@ export default function DashboardPage() {
   // Show teacher dashboard for teachers
   if (user?.userType === 'teacher') {
     return <TeacherDashboardPage />
+  }
+  
+  // Show DOS dashboard for directors
+  if (user?.userType === 'director') {
+    return <DOSDashboardPage />
   }
   
   return (

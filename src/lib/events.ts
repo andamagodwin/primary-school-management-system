@@ -1,5 +1,5 @@
 import { ID } from 'appwrite'
-import { databases, DATABASE_ID, EVENTS_COLLECTION_ID, account } from './appwrite'
+import { databases, DATABASE_ID, EVENTS_TABLE_ID, USERS_TABLE_ID, account } from './appwrite'
 
 export interface Event {
   $id: string
@@ -38,7 +38,7 @@ export async function createEvent(data: CreateEventData): Promise<Event> {
     // Get user profile to get full name
     const userProfile = await databases.listDocuments(
       DATABASE_ID,
-      'users',
+      USERS_TABLE_ID,
       []
     )
     
@@ -66,7 +66,7 @@ export async function createEvent(data: CreateEventData): Promise<Event> {
     
     const event = await databases.createDocument(
       DATABASE_ID,
-      EVENTS_COLLECTION_ID,
+      EVENTS_TABLE_ID,
       ID.unique(),
       eventData
     )
@@ -104,7 +104,7 @@ export async function getEvent(eventId: string): Promise<Event> {
   try {
     const event = await databases.getDocument(
       DATABASE_ID,
-      EVENTS_COLLECTION_ID,
+      EVENTS_TABLE_ID,
       eventId
     )
     
@@ -125,7 +125,7 @@ export async function updateEvent(
   try {
     const event = await databases.updateDocument(
       DATABASE_ID,
-      EVENTS_COLLECTION_ID,
+      EVENTS_TABLE_ID,
       documentId,
       data
     )
@@ -144,7 +144,7 @@ export async function deleteEvent(documentId: string): Promise<void> {
   try {
     await databases.deleteDocument(
       DATABASE_ID,
-      EVENTS_COLLECTION_ID,
+      EVENTS_TABLE_ID,
       documentId
     )
   } catch (error) {

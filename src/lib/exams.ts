@@ -1,5 +1,5 @@
 import { ID, Query } from 'appwrite'
-import { databases, DATABASE_ID, storage, STORAGE_BUCKET_ID, account } from './appwrite'
+import { databases, DATABASE_ID, EXAMS_TABLE_ID, USERS_TABLE_ID, storage, STORAGE_BUCKET_ID, account } from './appwrite'
 
 export interface Exam {
   $id: string
@@ -15,7 +15,7 @@ export interface Exam {
   fileUrl?: string
   fileName?: string
   fileSize?: number
-  status: 'draft' | 'submitted' | 'approved'
+  status: 'draft' | 'submitted' | 'approved' | 'rejected'
   createdBy: string
   createdByName: string
 }
@@ -30,7 +30,7 @@ export interface CreateExamData {
   fileUrl?: string
   fileName?: string
   fileSize?: number
-  status?: 'draft' | 'submitted' | 'approved'
+  status?: 'draft' | 'submitted' | 'approved' | 'rejected'
 }
 
 /**
@@ -60,7 +60,7 @@ export function getExamFileUrl(fileId: string): string {
 export async function createExam(data: CreateExamData): Promise<Exam> {
   try {
     const currentUser = await account.get()
-    const userProfile = await databases.listDocuments(DATABASE_ID, 'users', [])
+    const userProfile = await databases.listDocuments(DATABASE_ID, USERS_TABLE_ID, [])
     const user = userProfile.documents.find(doc => doc.userId === currentUser.$id)
     const createdByName = user?.fullName || currentUser.name || 'Unknown'
 
@@ -84,7 +84,7 @@ export async function createExam(data: CreateExamData): Promise<Exam> {
 
     const exam = await databases.createDocument(
       DATABASE_ID,
-      'exams',
+      EXAMS_TABLE_ID,
       ID.unique(),
       examData
     )
@@ -131,7 +131,7 @@ export async function getExams(filters?: {
 
     const response = await databases.listDocuments(
       DATABASE_ID,
-      'exams',
+      EXAMS_TABLE_ID,
       queries
     )
 
@@ -152,7 +152,7 @@ export async function updateExam(
   try {
     const exam = await databases.updateDocument(
       DATABASE_ID,
-      'exams',
+      EXAMS_TABLE_ID,
       documentId,
       data
     )
@@ -172,6 +172,44 @@ export async function deleteExam(documentId: string): Promise<void> {
     await databases.deleteDocument(DATABASE_ID, 'exams', documentId)
   } catch (error) {
     console.error('Error deleting exam:', error)
+    throw error
+  }
+}
+
+/**
+ * Approve exam
+ */
+export async function approveExam(documentId: string): Promise<Exam> {
+  try {
+    const exam = await databases.updateDocument(
+      DATABASE_ID,
+      EXAMS_TABLE_ID,
+      documentId,
+      { status: 'approved' }
+    )
+
+    return exam as unknown as Exam
+  } catch (error) {
+    console.error('Error approving exam:', error)
+    throw error
+  }
+}
+
+/**
+ * Reject exam
+ */
+export async function rejectExam(documentId: string): Promise<Exam> {
+  try {
+    const exam = await databases.updateDocument(
+      DATABASE_ID,
+      EXAMS_TABLE_ID,
+      documentId,
+      { status: 'rejected' }
+    )
+
+    return exam as unknown as Exam
+  } catch (error) {
+    console.error('Error rejecting exam:', error)
     throw error
   }
 }

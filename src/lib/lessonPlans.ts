@@ -1,5 +1,5 @@
 import { ID, Query } from 'appwrite'
-import { databases, DATABASE_ID, storage, STORAGE_BUCKET_ID, account } from './appwrite'
+import { databases, DATABASE_ID, LESSONPLANS_TABLE_ID, USERS_TABLE_ID, storage, STORAGE_BUCKET_ID, account } from './appwrite'
 
 export interface LessonPlan {
   $id: string
@@ -58,7 +58,7 @@ export function getLessonPlanFileUrl(fileId: string): string {
 export async function createLessonPlan(data: CreateLessonPlanData): Promise<LessonPlan> {
   try {
     const currentUser = await account.get()
-    const userProfile = await databases.listDocuments(DATABASE_ID, 'users', [])
+    const userProfile = await databases.listDocuments(DATABASE_ID, USERS_TABLE_ID, [])
     const user = userProfile.documents.find(doc => doc.userId === currentUser.$id)
     const createdByName = user?.fullName || currentUser.name || 'Unknown'
 
@@ -81,7 +81,7 @@ export async function createLessonPlan(data: CreateLessonPlanData): Promise<Less
 
     const lessonPlan = await databases.createDocument(
       DATABASE_ID,
-      'lessonPlans',
+      LESSONPLANS_TABLE_ID,
       ID.unique(),
       lessonPlanData
     )
@@ -128,7 +128,7 @@ export async function getLessonPlans(filters?: {
 
     const response = await databases.listDocuments(
       DATABASE_ID,
-      'lessonPlans',
+      LESSONPLANS_TABLE_ID,
       queries
     )
 
@@ -149,7 +149,7 @@ export async function updateLessonPlan(
   try {
     const lessonPlan = await databases.updateDocument(
       DATABASE_ID,
-      'lessonPlans',
+      LESSONPLANS_TABLE_ID,
       documentId,
       data
     )

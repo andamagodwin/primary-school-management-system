@@ -21,7 +21,7 @@ interface User {
   userId: string
   email: string
   fullName: string
-  userType: "admin" | "teacher" | "staff" | "parent" | "headteacher"
+  userType: "admin" | "teacher" | "staff" | "parent" | "headteacher" | "director"
   phoneNumber?: string
   status: "active" | "inactive" | "suspended"
   avatar?: string
@@ -141,6 +141,50 @@ const teacherMenuItems = [
   },
 ]
 
+// Menu items for Director of Studies
+const dosMenuItems = [
+  {
+    title: "Dashboard",
+    icon: LayoutDashboardIcon,
+    path: "/dashboard",
+  },
+  {
+    title: "Exams Management",
+    icon: FileTextIcon,
+    path: "/dos/exams",
+  },
+  {
+    title: "Student Results",
+    icon: ClipboardListIcon,
+    path: "/dos/results",
+  },
+  {
+    title: "Attendance Overview",
+    icon: CalendarIcon,
+    path: "/dos/attendance",
+  },
+  {
+    title: "Staff Applications",
+    icon: UserCogIcon,
+    path: "/dos/applications",
+  },
+  {
+    title: "Sports & Events",
+    icon: CalendarIcon,
+    path: "/dos/sports-events",
+  },
+  {
+    title: "Report Comments",
+    icon: MessageSquareIcon,
+    path: "/dos/report-comments",
+  },
+  {
+    title: "Settings",
+    icon: SettingsIcon,
+    path: "/settings",
+  },
+]
+
 export function Sidebar({ user }: SidebarProps) {
   const [isMobileOpen, setIsMobileOpen] = React.useState(false)
   const logout = useAuthStore((state) => state.logout)
@@ -174,6 +218,8 @@ export function Sidebar({ user }: SidebarProps) {
                 ? headteacherMenuItems 
                 : user?.userType === 'teacher'
                 ? teacherMenuItems
+                : user?.userType === 'director'
+                ? dosMenuItems
                 : regularMenuItems
             ).map((item) => {
               const Icon = item.icon
