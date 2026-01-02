@@ -102,6 +102,45 @@ const headteacherMenuItems = [
   },
 ]
 
+// Menu items for teachers
+const teacherMenuItems = [
+  {
+    title: "Dashboard",
+    icon: LayoutDashboardIcon,
+    path: "/dashboard",
+  },
+  {
+    title: "Enter Marks",
+    icon: ClipboardListIcon,
+    path: "/marks",
+  },
+  {
+    title: "Upload Exams",
+    icon: BookOpenIcon,
+    path: "/exams",
+  },
+  {
+    title: "Attendance",
+    icon: CalendarIcon,
+    path: "/attendance",
+  },
+  {
+    title: "Lesson Plans",
+    icon: BookOpenIcon,
+    path: "/lesson-plans",
+  },
+  {
+    title: "My Students",
+    icon: UsersIcon,
+    path: "/my-students",
+  },
+  {
+    title: "Settings",
+    icon: SettingsIcon,
+    path: "/settings",
+  },
+]
+
 export function Sidebar({ user }: SidebarProps) {
   const [isMobileOpen, setIsMobileOpen] = React.useState(false)
   const logout = useAuthStore((state) => state.logout)
@@ -130,7 +169,13 @@ export function Sidebar({ user }: SidebarProps) {
 
           {/* Navigation */}
           <nav className="flex-1 space-y-1 p-4">
-            {(user?.userType === 'headteacher' ? headteacherMenuItems : regularMenuItems).map((item) => {
+            {(
+              user?.userType === 'headteacher' 
+                ? headteacherMenuItems 
+                : user?.userType === 'teacher'
+                ? teacherMenuItems
+                : regularMenuItems
+            ).map((item) => {
               const Icon = item.icon
               
               return (

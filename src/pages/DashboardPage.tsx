@@ -1,6 +1,15 @@
 import { TrendingUpIcon, TrendingDownIcon, UsersIcon, BookOpenIcon, CheckCircle2Icon, ClipboardListIcon } from "lucide-react"
+import { useAuthStore } from "@/store/authStore"
+import TeacherDashboardPage from "./TeacherDashboardPage"
 
 export default function DashboardPage() {
+  const user = useAuthStore((state) => state.user)
+  
+  // Show teacher dashboard for teachers
+  if (user?.userType === 'teacher') {
+    return <TeacherDashboardPage />
+  }
+  
   return (
     <div className="space-y-6">
       <div>
