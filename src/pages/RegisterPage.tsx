@@ -9,7 +9,7 @@ export default function RegisterPage() {
     email: '',
     password: '',
     confirmPassword: '',
-    userType: 'teacher' as 'admin' | 'teacher' | 'staff' | 'parent'
+    userType: 'teacher' as 'admin' | 'teacher' | 'staff' | 'parent' | 'headteacher'
   })
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
@@ -120,6 +120,7 @@ export default function RegisterPage() {
                 <option value="staff">Staff</option>
                 <option value="admin">Admin</option>
                 <option value="parent">Parent</option>
+                <option value="headteacher">Headteacher</option>
               </select>
             </div>
 

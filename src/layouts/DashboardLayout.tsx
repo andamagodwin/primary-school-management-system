@@ -10,6 +10,10 @@ import AddClassPage from '@/pages/AddClassPage'
 import AttendancePage from '@/pages/AttendancePage'
 import SettingsPage from '@/pages/SettingsPage'
 import ProfilePage from '@/pages/ProfilePage'
+import SchoolEventsPage from '@/pages/SchoolEventsPage'
+import StaffManagementPage from '@/pages/StaffManagementPage'
+import SchoolReportsPage from '@/pages/SchoolReportsPage'
+import UNEBCommunicationsPage from '@/pages/UNEBCommunicationsPage'
 import { useAuthStore } from '@/store/authStore'
 
 export default function DashboardLayout() {
@@ -30,6 +34,10 @@ export default function DashboardLayout() {
             <Route path="/classes" element={<ClassesPage />} />
             <Route path="/classes/add" element={<AddClassPage />} />
             <Route path="/attendance" element={<AttendancePage />} />
+            <Route path="/events" element={<SchoolEventsPage />} />
+            <Route path="/staff-management" element={<StaffManagementPage />} />
+            <Route path="/reports" element={<SchoolReportsPage />} />
+            <Route path="/uneb-communications" element={<UNEBCommunicationsPage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />

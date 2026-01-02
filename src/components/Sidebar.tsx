@@ -9,6 +9,10 @@ import {
   MenuIcon,
   XIcon,
   LogOutIcon,
+  CalendarIcon,
+  FileTextIcon,
+  MessageSquareIcon,
+  UserCogIcon,
 } from "lucide-react"
 import { useAuthStore } from "@/store/authStore"
 
@@ -17,7 +21,7 @@ interface User {
   userId: string
   email: string
   fullName: string
-  userType: "admin" | "teacher" | "staff" | "parent"
+  userType: "admin" | "teacher" | "staff" | "parent" | "headteacher"
   phoneNumber?: string
   status: "active" | "inactive" | "suspended"
   avatar?: string
@@ -30,7 +34,8 @@ interface SidebarProps {
   user: User | null
 }
 
-const menuItems = [
+// Menu items for regular users
+const regularMenuItems = [
   {
     title: "Dashboard",
     icon: LayoutDashboardIcon,
@@ -55,6 +60,40 @@ const menuItems = [
     title: "Attendance",
     icon: ClipboardListIcon,
     path: "/attendance",
+  },
+  {
+    title: "Settings",
+    icon: SettingsIcon,
+    path: "/settings",
+  },
+]
+
+// Menu items for headteacher
+const headteacherMenuItems = [
+  {
+    title: "Dashboard",
+    icon: LayoutDashboardIcon,
+    path: "/dashboard",
+  },
+  {
+    title: "School Events",
+    icon: CalendarIcon,
+    path: "/events",
+  },
+  {
+    title: "Staff Management",
+    icon: UserCogIcon,
+    path: "/staff-management",
+  },
+  {
+    title: "School Reports",
+    icon: FileTextIcon,
+    path: "/reports",
+  },
+  {
+    title: "UNEB Communications",
+    icon: MessageSquareIcon,
+    path: "/uneb-communications",
   },
   {
     title: "Settings",
@@ -91,7 +130,7 @@ export function Sidebar({ user }: SidebarProps) {
 
           {/* Navigation */}
           <nav className="flex-1 space-y-1 p-4">
-            {menuItems.map((item) => {
+            {(user?.userType === 'headteacher' ? headteacherMenuItems : regularMenuItems).map((item) => {
               const Icon = item.icon
               
               return (
