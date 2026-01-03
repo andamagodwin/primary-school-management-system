@@ -2,6 +2,7 @@ import { TrendingUpIcon, TrendingDownIcon, UsersIcon, BookOpenIcon, CheckCircle2
 import { useAuthStore } from "@/store/authStore"
 import TeacherDashboardPage from "./TeacherDashboardPage"
 import DOSDashboardPage from "./DOSDashboardPage"
+import DirectorDashboardPage from "./DirectorDashboardPage"
 
 export default function DashboardPage() {
   const user = useAuthStore((state) => state.user)
@@ -11,7 +12,19 @@ export default function DashboardPage() {
     return <TeacherDashboardPage />
   }
   
-  // Show DOS dashboard for directors
+  // Show DOS dashboard for DOS users
+  // Note: 'director' userType is for Director of Studies (DOS)
+  // We need to check if there's a separate userType for School Director
+  // For now, assuming 'director' is DOS and we'll add a new type for School Director
+  // Actually, looking at the enum, 'director' is Director of Studies
+  // We might need to add 'schoolDirector' or use 'admin' for School Director
+  
+  // Show Director (School Director) dashboard
+  if (user?.userType === 'schoolDirector' || user?.userType === 'admin') {
+    return <DirectorDashboardPage />
+  }
+  
+  // Show DOS dashboard for DOS users
   if (user?.userType === 'director') {
     return <DOSDashboardPage />
   }

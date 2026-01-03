@@ -9,7 +9,7 @@ export interface User {
   userId: string
   email: string
   fullName: string
-  userType: 'admin' | 'teacher' | 'staff' | 'parent' | 'headteacher' | 'director'
+  userType: 'admin' | 'teacher' | 'staff' | 'parent' | 'headteacher' | 'director' | 'schoolDirector'
   phoneNumber?: string
   status: 'active' | 'inactive' | 'suspended'
   avatar?: string
@@ -26,7 +26,7 @@ interface AuthState {
   
   // Actions
   login: (email: string, password: string) => Promise<void>
-  register: (email: string, password: string, name: string, userType: 'admin' | 'teacher' | 'staff' | 'parent' | 'headteacher' | 'director') => Promise<void>
+  register: (email: string, password: string, name: string, userType: 'admin' | 'teacher' | 'staff' | 'parent' | 'headteacher' | 'director' | 'schoolDirector') => Promise<void>
   logout: () => Promise<void>
   checkAuth: () => Promise<void>
   updateUserProfile: (userId: string, data: Partial<User>) => Promise<Models.Document | void>

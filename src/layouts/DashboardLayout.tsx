@@ -26,6 +26,12 @@ import AttendanceOverviewPage from '@/pages/AttendanceOverviewPage'
 import StaffApplicationsPage from '@/pages/StaffApplicationsPage'
 import SportsEventsPage from '@/pages/SportsEventsPage'
 import ReportCommentsPage from '@/pages/ReportCommentsPage'
+import DirectorDashboardPage from '@/pages/DirectorDashboardPage'
+import FinancialOverviewPage from '@/pages/FinancialOverviewPage'
+import CreateAdminAccountsPage from '@/pages/CreateAdminAccountsPage'
+import ViewPortalsPage from '@/pages/ViewPortalsPage'
+import AuditLogsPage from '@/pages/AuditLogsPage'
+import GenerateReportsPage from '@/pages/GenerateReportsPage'
 import { useAuthStore } from '@/store/authStore'
 
 export default function DashboardLayout() {
@@ -65,6 +71,15 @@ export default function DashboardLayout() {
             <Route path="/dos/applications" element={<StaffApplicationsPage />} />
             <Route path="/dos/sports-events" element={<SportsEventsPage />} />
             <Route path="/dos/report-comments" element={<ReportCommentsPage />} />
+            {/* Director (School Director) routes */}
+            <Route path="/director/financial" element={<FinancialOverviewPage />} />
+            <Route path="/director/create-accounts" element={<CreateAdminAccountsPage />} />
+            <Route path="/director/view-dos" element={<ViewPortalsPage portalType="dos" />} />
+            <Route path="/director/view-bursar" element={<ViewPortalsPage portalType="bursar" />} />
+            <Route path="/director/view-headteacher" element={<ViewPortalsPage portalType="headteacher" />} />
+            <Route path="/director/view-it" element={<ViewPortalsPage portalType="it" />} />
+            <Route path="/director/audit-logs" element={<AuditLogsPage />} />
+            <Route path="/director/reports" element={<GenerateReportsPage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />

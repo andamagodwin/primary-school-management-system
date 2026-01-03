@@ -27,6 +27,9 @@ export const ATTENDANCE_TABLE_ID = import.meta.env.VITE_APPWRITE_ATTENDANCE_TABL
 export const LESSONPLANS_TABLE_ID = import.meta.env.VITE_APPWRITE_LESSONPLANS_TABLE_ID || 'lessonPlans';
 export const STAFF_APPLICATIONS_TABLE_ID = import.meta.env.VITE_APPWRITE_STAFF_APPLICATIONS_TABLE_ID || 'staffApplications';
 export const REPORT_COMMENTS_TABLE_ID = import.meta.env.VITE_APPWRITE_REPORT_COMMENTS_TABLE_ID || 'reportComments';
+export const FINANCIAL_DATA_TABLE_ID = import.meta.env.VITE_APPWRITE_FINANCIAL_DATA_TABLE_ID || 'financialData';
+export const AUDIT_LOGS_TABLE_ID = import.meta.env.VITE_APPWRITE_AUDIT_LOGS_TABLE_ID || 'auditLogs';
+export const GENERATED_REPORTS_TABLE_ID = import.meta.env.VITE_APPWRITE_GENERATED_REPORTS_TABLE_ID || 'generatedReports';
 
 // Storage Bucket ID
 export const STORAGE_BUCKET_ID = import.meta.env.VITE_APPWRITE_STORAGE_BUCKET_ID || '';

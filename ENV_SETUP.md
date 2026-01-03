@@ -24,6 +24,9 @@ VITE_APPWRITE_ATTENDANCE_TABLE_ID=attendance
 VITE_APPWRITE_LESSONPLANS_TABLE_ID=lessonPlans
 VITE_APPWRITE_STAFF_APPLICATIONS_TABLE_ID=staffApplications
 VITE_APPWRITE_REPORT_COMMENTS_TABLE_ID=reportComments
+VITE_APPWRITE_FINANCIAL_DATA_TABLE_ID=financialData
+VITE_APPWRITE_AUDIT_LOGS_TABLE_ID=auditLogs
+VITE_APPWRITE_GENERATED_REPORTS_TABLE_ID=generatedReports
 
 # Storage Bucket ID (for file uploads)
 VITE_APPWRITE_STORAGE_BUCKET_ID=your-storage-bucket-id
@@ -44,6 +47,9 @@ The following tables have been created in your Appwrite database:
 9. **lessonPlans** - Lesson plans uploaded by teachers
 10. **staffApplications** - Staff job applications
 11. **reportComments** - Director of Studies comments on student reports
+12. **financialData** - Financial budgets, revenue, and expenses
+13. **auditLogs** - System audit logs for all user actions
+14. **generatedReports** - Generated PDF reports
 
 ## Default Values
 

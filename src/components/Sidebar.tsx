@@ -13,6 +13,13 @@ import {
   FileTextIcon,
   MessageSquareIcon,
   UserCogIcon,
+  DollarSignIcon,
+  UserPlusIcon,
+  GraduationCapIcon,
+  CalculatorIcon,
+  CrownIcon,
+  LaptopIcon,
+  HistoryIcon,
 } from "lucide-react"
 import { useAuthStore } from "@/store/authStore"
 
@@ -21,7 +28,7 @@ interface User {
   userId: string
   email: string
   fullName: string
-  userType: "admin" | "teacher" | "staff" | "parent" | "headteacher" | "director"
+  userType: "admin" | "teacher" | "staff" | "parent" | "headteacher" | "director" | "schoolDirector"
   phoneNumber?: string
   status: "active" | "inactive" | "suspended"
   avatar?: string
@@ -185,6 +192,60 @@ const dosMenuItems = [
   },
 ]
 
+// Menu items for Director (School Director)
+const directorMenuItems = [
+  {
+    title: "Dashboard",
+    icon: LayoutDashboardIcon,
+    path: "/dashboard",
+  },
+  {
+    title: "Financial Overview",
+    icon: DollarSignIcon,
+    path: "/director/financial",
+  },
+  {
+    title: "Create Admin Accounts",
+    icon: UserPlusIcon,
+    path: "/director/create-accounts",
+  },
+  {
+    title: "View DOS Portal",
+    icon: GraduationCapIcon,
+    path: "/director/view-dos",
+  },
+  {
+    title: "View Bursar Portal",
+    icon: CalculatorIcon,
+    path: "/director/view-bursar",
+  },
+  {
+    title: "View Head Teacher",
+    icon: CrownIcon,
+    path: "/director/view-headteacher",
+  },
+  {
+    title: "View IT Portal",
+    icon: LaptopIcon,
+    path: "/director/view-it",
+  },
+  {
+    title: "Audit Logs",
+    icon: HistoryIcon,
+    path: "/director/audit-logs",
+  },
+  {
+    title: "Generate Reports",
+    icon: FileTextIcon,
+    path: "/director/reports",
+  },
+  {
+    title: "Settings",
+    icon: SettingsIcon,
+    path: "/settings",
+  },
+]
+
 export function Sidebar({ user }: SidebarProps) {
   const [isMobileOpen, setIsMobileOpen] = React.useState(false)
   const logout = useAuthStore((state) => state.logout)
@@ -214,12 +275,14 @@ export function Sidebar({ user }: SidebarProps) {
           {/* Navigation */}
           <nav className="flex-1 space-y-1 p-4">
             {(
-              user?.userType === 'headteacher' 
+              user?.userType === 'schoolDirector' || user?.userType === 'admin'
+                ? directorMenuItems
+                : user?.userType === 'director'
+                ? dosMenuItems
+                : user?.userType === 'headteacher' 
                 ? headteacherMenuItems 
                 : user?.userType === 'teacher'
                 ? teacherMenuItems
-                : user?.userType === 'director'
-                ? dosMenuItems
                 : regularMenuItems
             ).map((item) => {
               const Icon = item.icon
