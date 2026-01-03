@@ -20,6 +20,9 @@ import {
   CrownIcon,
   LaptopIcon,
   HistoryIcon,
+  BoxesIcon,
+  CreditCardIcon,
+  UserCheckIcon,
 } from "lucide-react"
 import { useAuthStore } from "@/store/authStore"
 
@@ -28,7 +31,7 @@ interface User {
   userId: string
   email: string
   fullName: string
-  userType: "admin" | "teacher" | "staff" | "parent" | "headteacher" | "director" | "schoolDirector"
+  userType: "admin" | "teacher" | "staff" | "parent" | "headteacher" | "director" | "schoolDirector" | "bursar"
   phoneNumber?: string
   status: "active" | "inactive" | "suspended"
   avatar?: string
@@ -192,6 +195,55 @@ const dosMenuItems = [
   },
 ]
 
+// Menu items for Bursar
+const bursarMenuItems = [
+  {
+    title: "Dashboard",
+    icon: LayoutDashboardIcon,
+    path: "/bursar/dashboard",
+  },
+  {
+    title: "Inventory",
+    icon: BoxesIcon,
+    path: "/bursar/inventory",
+  },
+  {
+    title: "Library",
+    icon: BookOpenIcon,
+    path: "/bursar/library",
+  },
+  {
+    title: "Fee Payments",
+    icon: CreditCardIcon,
+    path: "/bursar/payments",
+  },
+  {
+    title: "Staff Applications",
+    icon: UserCogIcon,
+    path: "/bursar/staff-applications",
+  },
+  {
+    title: "Attendance",
+    icon: ClipboardListIcon,
+    path: "/bursar/attendance",
+  },
+  {
+    title: "Student Dashboards",
+    icon: UsersIcon,
+    path: "/bursar/students",
+  },
+  {
+    title: "Admin Access",
+    icon: UserCheckIcon,
+    path: "/bursar/admin-access",
+  },
+  {
+    title: "Settings",
+    icon: SettingsIcon,
+    path: "/settings",
+  },
+]
+
 // Menu items for Director (School Director)
 const directorMenuItems = [
   {
@@ -283,6 +335,8 @@ export function Sidebar({ user }: SidebarProps) {
                 ? headteacherMenuItems 
                 : user?.userType === 'teacher'
                 ? teacherMenuItems
+                : user?.userType === 'bursar'
+                ? bursarMenuItems
                 : regularMenuItems
             ).map((item) => {
               const Icon = item.icon

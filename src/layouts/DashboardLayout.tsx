@@ -32,6 +32,13 @@ import CreateAdminAccountsPage from '@/pages/CreateAdminAccountsPage'
 import ViewPortalsPage from '@/pages/ViewPortalsPage'
 import AuditLogsPage from '@/pages/AuditLogsPage'
 import GenerateReportsPage from '@/pages/GenerateReportsPage'
+import BursarDashboardPage from '@/pages/BursarDashboardPage'
+import BursarInventoryPage from '@/pages/BursarInventoryPage'
+import BursarLibraryPage from '@/pages/BursarLibraryPage'
+import BursarPaymentsPage from '@/pages/BursarPaymentsPage'
+import BursarAttendancePage from '@/pages/BursarAttendancePage'
+import BursarStudentsPage from '@/pages/BursarStudentsPage'
+import BursarAdminAccessPage from '@/pages/BursarAdminAccessPage'
 import { useAuthStore } from '@/store/authStore'
 
 export default function DashboardLayout() {
@@ -80,6 +87,15 @@ export default function DashboardLayout() {
             <Route path="/director/view-it" element={<ViewPortalsPage portalType="it" />} />
             <Route path="/director/audit-logs" element={<AuditLogsPage />} />
             <Route path="/director/reports" element={<GenerateReportsPage />} />
+            {/* Bursar routes */}
+            <Route path="/bursar/dashboard" element={<BursarDashboardPage />} />
+            <Route path="/bursar/inventory" element={<BursarInventoryPage />} />
+            <Route path="/bursar/library" element={<BursarLibraryPage />} />
+            <Route path="/bursar/payments" element={<BursarPaymentsPage />} />
+            <Route path="/bursar/staff-applications" element={<StaffApplicationsPage />} />
+            <Route path="/bursar/attendance" element={<BursarAttendancePage />} />
+            <Route path="/bursar/students" element={<BursarStudentsPage />} />
+            <Route path="/bursar/admin-access" element={<BursarAdminAccessPage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />

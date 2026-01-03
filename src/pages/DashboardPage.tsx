@@ -3,6 +3,7 @@ import { useAuthStore } from "@/store/authStore"
 import TeacherDashboardPage from "./TeacherDashboardPage"
 import DOSDashboardPage from "./DOSDashboardPage"
 import DirectorDashboardPage from "./DirectorDashboardPage"
+import BursarDashboardPage from "./BursarDashboardPage"
 
 export default function DashboardPage() {
   const user = useAuthStore((state) => state.user)
@@ -27,6 +28,11 @@ export default function DashboardPage() {
   // Show DOS dashboard for DOS users
   if (user?.userType === 'director') {
     return <DOSDashboardPage />
+  }
+  
+  // Show Bursar dashboard for Bursar users
+  if (user?.userType === 'bursar') {
+    return <BursarDashboardPage />
   }
   
   return (

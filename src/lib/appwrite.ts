@@ -30,6 +30,11 @@ export const REPORT_COMMENTS_TABLE_ID = import.meta.env.VITE_APPWRITE_REPORT_COM
 export const FINANCIAL_DATA_TABLE_ID = import.meta.env.VITE_APPWRITE_FINANCIAL_DATA_TABLE_ID || 'financialData';
 export const AUDIT_LOGS_TABLE_ID = import.meta.env.VITE_APPWRITE_AUDIT_LOGS_TABLE_ID || 'auditLogs';
 export const GENERATED_REPORTS_TABLE_ID = import.meta.env.VITE_APPWRITE_GENERATED_REPORTS_TABLE_ID || 'generatedReports';
+export const INVENTORY_TABLE_ID = import.meta.env.VITE_APPWRITE_INVENTORY_TABLE_ID || 'inventory';
+export const LIBRARY_BOOKS_TABLE_ID = import.meta.env.VITE_APPWRITE_LIBRARY_BOOKS_TABLE_ID || 'libraryBooks';
+export const LIBRARY_BORROWING_TABLE_ID = import.meta.env.VITE_APPWRITE_LIBRARY_BORROWING_TABLE_ID || 'libraryBorrowing';
+export const FEE_PAYMENTS_TABLE_ID = import.meta.env.VITE_APPWRITE_FEE_PAYMENTS_TABLE_ID || 'feePayments';
+export const BANK_NOTIFICATIONS_TABLE_ID = import.meta.env.VITE_APPWRITE_BANK_NOTIFICATIONS_TABLE_ID || 'bankNotifications';
 
 // Storage Bucket ID
 export const STORAGE_BUCKET_ID = import.meta.env.VITE_APPWRITE_STORAGE_BUCKET_ID || '';

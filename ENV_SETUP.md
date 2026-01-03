@@ -27,6 +27,11 @@ VITE_APPWRITE_REPORT_COMMENTS_TABLE_ID=reportComments
 VITE_APPWRITE_FINANCIAL_DATA_TABLE_ID=financialData
 VITE_APPWRITE_AUDIT_LOGS_TABLE_ID=auditLogs
 VITE_APPWRITE_GENERATED_REPORTS_TABLE_ID=generatedReports
+VITE_APPWRITE_INVENTORY_TABLE_ID=inventory
+VITE_APPWRITE_LIBRARY_BOOKS_TABLE_ID=libraryBooks
+VITE_APPWRITE_LIBRARY_BORROWING_TABLE_ID=libraryBorrowing
+VITE_APPWRITE_FEE_PAYMENTS_TABLE_ID=feePayments
+VITE_APPWRITE_BANK_NOTIFICATIONS_TABLE_ID=bankNotifications
 
 # Storage Bucket ID (for file uploads)
 VITE_APPWRITE_STORAGE_BUCKET_ID=your-storage-bucket-id
@@ -50,6 +55,11 @@ The following tables have been created in your Appwrite database:
 12. **financialData** - Financial budgets, revenue, and expenses
 13. **auditLogs** - System audit logs for all user actions
 14. **generatedReports** - Generated PDF reports
+15. **inventory** - School materials inventory
+16. **libraryBooks** - Library books catalog
+17. **libraryBorrowing** - Library borrowing records
+18. **feePayments** - Student fee payment records
+19. **bankNotifications** - Bank transaction notifications
 
 ## Default Values
 
