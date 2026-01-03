@@ -32,6 +32,8 @@ VITE_APPWRITE_LIBRARY_BOOKS_TABLE_ID=libraryBooks
 VITE_APPWRITE_LIBRARY_BORROWING_TABLE_ID=libraryBorrowing
 VITE_APPWRITE_FEE_PAYMENTS_TABLE_ID=feePayments
 VITE_APPWRITE_BANK_NOTIFICATIONS_TABLE_ID=bankNotifications
+VITE_APPWRITE_SYSTEM_BACKUPS_TABLE_ID=systemBackups
+VITE_APPWRITE_USER_PERMISSIONS_TABLE_ID=userPermissions
 
 # Storage Bucket ID (for file uploads)
 VITE_APPWRITE_STORAGE_BUCKET_ID=your-storage-bucket-id
@@ -60,6 +62,8 @@ The following tables have been created in your Appwrite database:
 17. **libraryBorrowing** - Library borrowing records
 18. **feePayments** - Student fee payment records
 19. **bankNotifications** - Bank transaction notifications
+20. **systemBackups** - System backup records
+21. **userPermissions** - User permission settings for portal access
 
 ## Default Values
 

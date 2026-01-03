@@ -23,6 +23,10 @@ import {
   BoxesIcon,
   CreditCardIcon,
   UserCheckIcon,
+  ServerIcon,
+  DatabaseIcon,
+  ShieldIcon,
+  UserIcon,
 } from "lucide-react"
 import { useAuthStore } from "@/store/authStore"
 
@@ -31,7 +35,7 @@ interface User {
   userId: string
   email: string
   fullName: string
-  userType: "admin" | "teacher" | "staff" | "parent" | "headteacher" | "director" | "schoolDirector" | "bursar"
+  userType: "admin" | "teacher" | "staff" | "parent" | "headteacher" | "director" | "schoolDirector" | "bursar" | "it"
   phoneNumber?: string
   status: "active" | "inactive" | "suspended"
   avatar?: string
@@ -195,6 +199,50 @@ const dosMenuItems = [
   },
 ]
 
+// Menu items for IT Administrator
+const itMenuItems = [
+  {
+    title: "Dashboard",
+    icon: LayoutDashboardIcon,
+    path: "/it/dashboard",
+  },
+  {
+    title: "User Management",
+    icon: UsersIcon,
+    path: "/it/users",
+  },
+  {
+    title: "Teacher Accounts",
+    icon: GraduationCapIcon,
+    path: "/it/teachers",
+  },
+  {
+    title: "Student Accounts",
+    icon: UserIcon,
+    path: "/it/students",
+  },
+  {
+    title: "System Health",
+    icon: ServerIcon,
+    path: "/it/system",
+  },
+  {
+    title: "Audit Logs",
+    icon: HistoryIcon,
+    path: "/it/audit",
+  },
+  {
+    title: "Backup & Recovery",
+    icon: DatabaseIcon,
+    path: "/it/backup",
+  },
+  {
+    title: "Settings",
+    icon: SettingsIcon,
+    path: "/settings",
+  },
+]
+
 // Menu items for Bursar
 const bursarMenuItems = [
   {
@@ -337,6 +385,8 @@ export function Sidebar({ user }: SidebarProps) {
                 ? teacherMenuItems
                 : user?.userType === 'bursar'
                 ? bursarMenuItems
+                : user?.userType === 'it'
+                ? itMenuItems
                 : regularMenuItems
             ).map((item) => {
               const Icon = item.icon

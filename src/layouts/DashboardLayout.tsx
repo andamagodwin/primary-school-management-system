@@ -39,6 +39,12 @@ import BursarPaymentsPage from '@/pages/BursarPaymentsPage'
 import BursarAttendancePage from '@/pages/BursarAttendancePage'
 import BursarStudentsPage from '@/pages/BursarStudentsPage'
 import BursarAdminAccessPage from '@/pages/BursarAdminAccessPage'
+import ITDashboardPage from '@/pages/ITDashboardPage'
+import ITUserManagementPage from '@/pages/ITUserManagementPage'
+import ITTeacherAccountsPage from '@/pages/ITTeacherAccountsPage'
+import ITStudentAccountsPage from '@/pages/ITStudentAccountsPage'
+import ITSystemHealthPage from '@/pages/ITSystemHealthPage'
+import ITBackupPage from '@/pages/ITBackupPage'
 import { useAuthStore } from '@/store/authStore'
 
 export default function DashboardLayout() {
@@ -96,6 +102,14 @@ export default function DashboardLayout() {
             <Route path="/bursar/attendance" element={<BursarAttendancePage />} />
             <Route path="/bursar/students" element={<BursarStudentsPage />} />
             <Route path="/bursar/admin-access" element={<BursarAdminAccessPage />} />
+            {/* IT routes */}
+            <Route path="/it/dashboard" element={<ITDashboardPage />} />
+            <Route path="/it/users" element={<ITUserManagementPage />} />
+            <Route path="/it/teachers" element={<ITTeacherAccountsPage />} />
+            <Route path="/it/students" element={<ITStudentAccountsPage />} />
+            <Route path="/it/system" element={<ITSystemHealthPage />} />
+            <Route path="/it/audit" element={<AuditLogsPage />} />
+            <Route path="/it/backup" element={<ITBackupPage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
