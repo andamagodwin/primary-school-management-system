@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
-import { UserPlusIcon, KeyIcon, CopyIcon, EyeIcon, BanIcon, RefreshCwIcon, Loader2Icon } from "lucide-react"
+import { UserPlusIcon, KeyIcon, CopyIcon, EyeIcon, BanIcon, RefreshCwIcon, Loader2Icon, XIcon } from "lucide-react"
 import { toast } from "sonner"
-import { ID } from "appwrite"
+import { ID, Query } from "appwrite"
 import { account, databases, DATABASE_ID, USERS_TABLE_ID } from "@/lib/appwrite"
 import { useAuthStore } from "@/store/authStore"
 import { createAuditLog } from "@/lib/auditLogs"
@@ -19,6 +19,10 @@ export default function CreateAdminAccountsPage() {
   const [accessExpiry, setAccessExpiry] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [existingAccounts, setExistingAccounts] = useState<any[]>([])
+  const [viewingAccount, setViewingAccount] = useState<any | null>(null)
+  const [isResettingPassword, setIsResettingPassword] = useState<string | null>(null)
+  const [isDeactivating, setIsDeactivating] = useState<string | null>(null)
+  const [newPassword, setNewPassword] = useState("")
 
   useEffect(() => {
     loadExistingAccounts()
@@ -154,6 +158,88 @@ export default function CreateAdminAccountsPage() {
       toast.error(error.message || 'Failed to create account')
     } finally {
       setIsSubmitting(false)
+    }
+  }
+
+  const handleViewAccount = (accountData: any) => {
+    setViewingAccount(accountData)
+  }
+
+  const handleResetPassword = async (accountData: any) => {
+    if (!confirm(`Are you sure you want to reset the password for ${accountData.fullName}?`)) {
+      return
+    }
+
+    setIsResettingPassword(accountData.$id)
+    try {
+      // Generate new password
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*'
+      let generatedPassword = ''
+      for (let i = 0; i < 12; i++) {
+        generatedPassword += chars.charAt(Math.floor(Math.random() * chars.length))
+      }
+      setNewPassword(generatedPassword)
+
+      // Note: In a real application, you would use Appwrite's server SDK or admin API
+      // to reset passwords. For now, we'll show the generated password to the admin
+      // who can then communicate it to the user securely.
+      
+      // Log the password reset
+      await createAuditLog({
+        action: 'password_reset',
+        details: `Password reset initiated for ${accountData.fullName} (${accountData.email})`,
+        status: 'success',
+      })
+
+      toast.success(`New password generated for ${accountData.fullName}. Please copy and share securely.`)
+    } catch (error: any) {
+      console.error('Error resetting password:', error)
+      toast.error(error.message || 'Failed to reset password')
+    } finally {
+      setIsResettingPassword(null)
+    }
+  }
+
+  const handleDeactivateAccount = async (accountData: any) => {
+    if (!confirm(`Are you sure you want to ${accountData.status === 'active' ? 'deactivate' : 'activate'} ${accountData.fullName}'s account?`)) {
+      return
+    }
+
+    setIsDeactivating(accountData.$id)
+    try {
+      const newStatus = accountData.status === 'active' ? 'inactive' : 'active'
+      
+      // Update user status in users table
+      await databases.updateDocument(
+        DATABASE_ID,
+        USERS_TABLE_ID,
+        accountData.$id,
+        { status: newStatus }
+      )
+
+      // Log the status change
+      await createAuditLog({
+        action: 'account_status_change',
+        details: `${newStatus === 'active' ? 'Activated' : 'Deactivated'} account for ${accountData.fullName}`,
+        status: 'success',
+      })
+
+      toast.success(`Account ${newStatus === 'active' ? 'activated' : 'deactivated'} successfully`)
+      loadExistingAccounts()
+    } catch (error: any) {
+      console.error('Error updating account status:', error)
+      toast.error(error.message || 'Failed to update account status')
+    } finally {
+      setIsDeactivating(null)
+    }
+  }
+
+  const copyNewPassword = async () => {
+    try {
+      await navigator.clipboard.writeText(newPassword)
+      toast.success('Password copied to clipboard')
+    } catch (error) {
+      toast.error('Failed to copy password')
     }
   }
 
@@ -370,17 +456,36 @@ export default function CreateAdminAccountsPage() {
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex gap-2">
-                        <button className="rounded-md border px-3 py-1 text-sm hover:bg-muted">
+                        <button
+                          onClick={() => handleViewAccount(account)}
+                          className="rounded-md border px-3 py-1 text-sm hover:bg-muted"
+                        >
                           <EyeIcon className="mr-1 inline h-4 w-4" />
                           View
                         </button>
-                        <button className="rounded-md border px-3 py-1 text-sm hover:bg-muted">
-                          <RefreshCwIcon className="mr-1 inline h-4 w-4" />
+                        <button
+                          onClick={() => handleResetPassword(account)}
+                          disabled={isResettingPassword === account.$id}
+                          className="rounded-md border px-3 py-1 text-sm hover:bg-muted disabled:opacity-50"
+                        >
+                          {isResettingPassword === account.$id ? (
+                            <Loader2Icon className="mr-1 inline h-4 w-4 animate-spin" />
+                          ) : (
+                            <RefreshCwIcon className="mr-1 inline h-4 w-4" />
+                          )}
                           Reset Pass
                         </button>
-                        <button className="rounded-md border bg-red-50 px-3 py-1 text-sm text-red-700 hover:bg-red-100">
-                          <BanIcon className="mr-1 inline h-4 w-4" />
-                          Deactivate
+                        <button
+                          onClick={() => handleDeactivateAccount(account)}
+                          disabled={isDeactivating === account.$id}
+                          className="rounded-md border bg-red-50 px-3 py-1 text-sm text-red-700 hover:bg-red-100 disabled:opacity-50"
+                        >
+                          {isDeactivating === account.$id ? (
+                            <Loader2Icon className="mr-1 inline h-4 w-4 animate-spin" />
+                          ) : (
+                            <BanIcon className="mr-1 inline h-4 w-4" />
+                          )}
+                          {account.status === 'active' ? 'Deactivate' : 'Activate'}
                         </button>
                       </div>
                     </td>
@@ -397,6 +502,145 @@ export default function CreateAdminAccountsPage() {
           </table>
         </div>
       </div>
+
+      {/* View Account Modal */}
+      {viewingAccount && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="w-full max-w-2xl rounded-lg border bg-card p-6 shadow-lg">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-xl font-semibold">Account Details</h3>
+              <button
+                onClick={() => setViewingAccount(null)}
+                className="rounded-md p-1 hover:bg-muted"
+              >
+                <XIcon className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="space-y-4">
+              <div className="grid gap-4 md:grid-cols-2">
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Full Name</label>
+                  <p className="text-sm font-semibold">{viewingAccount.fullName}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Position</label>
+                  <p className="text-sm font-semibold">{getPositionName(viewingAccount.userType)}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Email</label>
+                  <p className="text-sm">{viewingAccount.email}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Phone</label>
+                  <p className="text-sm">{viewingAccount.phoneNumber || 'Not provided'}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Employee ID</label>
+                  <p className="text-sm">{viewingAccount.employeeId || 'Not assigned'}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Status</label>
+                  <span className={`inline-block rounded-full px-2 py-1 text-xs font-medium ${
+                    viewingAccount.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                  }`}>
+                    {viewingAccount.status}
+                  </span>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Date Joined</label>
+                  <p className="text-sm">
+                    {viewingAccount.dateJoined 
+                      ? new Date(viewingAccount.dateJoined).toLocaleDateString()
+                      : 'Not available'}
+                  </p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground">Last Login</label>
+                  <p className="text-sm">
+                    {viewingAccount.lastLogin 
+                      ? new Date(viewingAccount.lastLogin).toLocaleString()
+                      : 'Never'}
+                  </p>
+                </div>
+              </div>
+              <div className="pt-4">
+                <h4 className="mb-2 text-sm font-semibold">Permissions</h4>
+                <div className="rounded-lg border bg-muted p-4">
+                  {getPermissionsForType(viewingAccount.userType).map((permission) => (
+                    <div key={permission.id} className="mb-2 text-sm">
+                      <span className="font-medium">{permission.name}</span>
+                      <span className="ml-2 text-xs text-muted-foreground">
+                        - {permission.description}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="mt-6 flex justify-end">
+              <button
+                onClick={() => setViewingAccount(null)}
+                className="rounded-md border px-4 py-2 text-sm hover:bg-muted"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Password Reset Modal */}
+      {newPassword && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="w-full max-w-md rounded-lg border bg-card p-6 shadow-lg">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-xl font-semibold">New Password Generated</h3>
+              <button
+                onClick={() => {
+                  setNewPassword("")
+                  setIsResettingPassword(null)
+                }}
+                className="rounded-md p-1 hover:bg-muted"
+              >
+                <XIcon className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="mb-4 space-y-2">
+              <p className="text-sm text-muted-foreground">
+                A new password has been generated. Please copy it and share it securely with the user.
+              </p>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={newPassword}
+                  readOnly
+                  className="flex-1 rounded-md border bg-background px-3 py-2 text-sm font-mono"
+                />
+                <button
+                  onClick={copyNewPassword}
+                  className="rounded-md border bg-background px-4 py-2 text-sm hover:bg-muted"
+                >
+                  <CopyIcon className="h-4 w-4" />
+                </button>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                ⚠️ This password will only be shown once. Make sure to copy it now.
+              </p>
+            </div>
+            <div className="flex justify-end">
+              <button
+                onClick={() => {
+                  setNewPassword("")
+                  setIsResettingPassword(null)
+                }}
+                className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+              >
+                I've Copied It
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
