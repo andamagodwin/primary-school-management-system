@@ -34,6 +34,7 @@ VITE_APPWRITE_FEE_PAYMENTS_TABLE_ID=feePayments
 VITE_APPWRITE_BANK_NOTIFICATIONS_TABLE_ID=bankNotifications
 VITE_APPWRITE_SYSTEM_BACKUPS_TABLE_ID=systemBackups
 VITE_APPWRITE_USER_PERMISSIONS_TABLE_ID=userPermissions
+VITE_APPWRITE_SCHOOL_SETTINGS_TABLE_ID=schoolSettings
 
 # Storage Bucket ID (for file uploads)
 VITE_APPWRITE_STORAGE_BUCKET_ID=your-storage-bucket-id
@@ -64,6 +65,7 @@ The following tables have been created in your Appwrite database:
 19. **bankNotifications** - Bank transaction notifications
 20. **systemBackups** - System backup records
 21. **userPermissions** - User permission settings for portal access
+22. **schoolSettings** - School information and system settings
 
 ## Default Values
 

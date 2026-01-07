@@ -87,7 +87,7 @@ export async function getEvents(): Promise<Event[]> {
   try {
     const response = await databases.listDocuments(
       DATABASE_ID,
-      EVENTS_COLLECTION_ID
+      EVENTS_TABLE_ID
     )
     
     return response.documents as unknown as Event[]

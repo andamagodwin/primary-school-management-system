@@ -37,6 +37,7 @@ export const FEE_PAYMENTS_TABLE_ID = import.meta.env.VITE_APPWRITE_FEE_PAYMENTS_
 export const BANK_NOTIFICATIONS_TABLE_ID = import.meta.env.VITE_APPWRITE_BANK_NOTIFICATIONS_TABLE_ID || 'bankNotifications';
 export const SYSTEM_BACKUPS_TABLE_ID = import.meta.env.VITE_APPWRITE_SYSTEM_BACKUPS_TABLE_ID || 'systemBackups';
 export const USER_PERMISSIONS_TABLE_ID = import.meta.env.VITE_APPWRITE_USER_PERMISSIONS_TABLE_ID || 'userPermissions';
+export const SCHOOL_SETTINGS_TABLE_ID = import.meta.env.VITE_APPWRITE_SCHOOL_SETTINGS_TABLE_ID || 'schoolSettings';
 
 // Storage Bucket ID
 export const STORAGE_BUCKET_ID = import.meta.env.VITE_APPWRITE_STORAGE_BUCKET_ID || '';
