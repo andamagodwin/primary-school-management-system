@@ -190,7 +190,7 @@ export async function updateMark(
  */
 export async function deleteMark(documentId: string): Promise<void> {
   try {
-    await databases.deleteDocument(DATABASE_ID, 'marks', documentId)
+    await databases.deleteDocument(DATABASE_ID, MARKS_TABLE_ID, documentId)
   } catch (error) {
     console.error('Error deleting mark:', error)
     throw error

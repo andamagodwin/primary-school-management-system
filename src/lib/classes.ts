@@ -219,3 +219,65 @@ export async function getClassesByTeacher(teacherId: string): Promise<Class[]> {
     throw error
   }
 }
+
+/**
+ * Create primary school classes with standard subjects
+ * This creates classes for P1-P7 with appropriate subjects for each grade
+ */
+export async function createPrimarySchoolClasses(academicYear: string = new Date().getFullYear().toString(), term: 'Term1' | 'Term2' | 'Term3' = 'Term1'): Promise<Class[]> {
+  try {
+    // Primary school subjects by grade level
+    const subjectsByGrade: Record<string, string[]> = {
+      P1: ['Mathematics', 'English', 'Science', 'Social Studies', 'Religious Education', 'Art', 'Physical Education'],
+      P2: ['Mathematics', 'English', 'Science', 'Social Studies', 'Religious Education', 'Art', 'Physical Education'],
+      P3: ['Mathematics', 'English', 'Science', 'Social Studies', 'Religious Education', 'Art', 'Physical Education'],
+      P4: ['Mathematics', 'English', 'Science', 'Social Studies', 'Religious Education', 'Art', 'Physical Education'],
+      P5: ['Mathematics', 'English', 'Science', 'Social Studies', 'Religious Education', 'Art', 'Physical Education'],
+      P6: ['Mathematics', 'English', 'Science', 'Social Studies', 'Religious Education', 'Art', 'Physical Education'],
+      P7: ['Mathematics', 'English', 'Science', 'Social Studies', 'Religious Education', 'Art', 'Physical Education'],
+    }
+
+    const grades: Array<'P1' | 'P2' | 'P3' | 'P4' | 'P5' | 'P6' | 'P7'> = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7']
+    const createdClasses: Class[] = []
+
+    for (const grade of grades) {
+      const classData: CreateClassData = {
+        name: `Primary ${grade.slice(1)}`,
+        grade,
+        capacity: 40,
+        subjects: subjectsByGrade[grade],
+        academicYear,
+        term,
+      }
+
+      const newClass = await createClass(classData)
+      createdClasses.push(newClass)
+    }
+
+    return createdClasses
+  } catch (error) {
+    console.error('Error creating primary school classes:', error)
+    throw error
+  }
+}
+
+/**
+ * Assign teacher to a class
+ */
+export async function assignTeacherToClass(
+  classId: string,
+  teacherId: string,
+  teacherName: string
+): Promise<Class> {
+  try {
+    const updatedClass = await updateClass(classId, {
+      classTeacherId: teacherId,
+      classTeacherName: teacherName,
+    })
+
+    return updatedClass
+  } catch (error) {
+    console.error('Error assigning teacher to class:', error)
+    throw error
+  }
+}
