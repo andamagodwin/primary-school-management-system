@@ -4,7 +4,6 @@ import './App.css'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
-import ApplyForStaffPage from './pages/ApplyForStaffPage'
 import DashboardLayout from './layouts/DashboardLayout'
 
 function App() {
@@ -15,7 +14,6 @@ function App() {
         {/* Public Routes */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/apply-for-staff" element={<ApplyForStaffPage />} />
 
         {/* Protected Routes */}
         <Route

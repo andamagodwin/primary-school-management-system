@@ -87,7 +87,7 @@ const headteacherMenuItems = [
   {
     title: "Dashboard",
     icon: LayoutDashboardIcon,
-    path: "/dashboard",
+    path: "/headteacher/dashboard",
   },
   {
     title: "School Events",

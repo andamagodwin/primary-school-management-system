@@ -57,6 +57,48 @@ export const getAllUsers = async (filters?: {
   return users;
 };
 
+export type CreateSystemUserInput = {
+  fullName: string;
+  email: string;
+  phoneNumber?: string;
+  userType: 'admin' | 'teacher' | 'staff' | 'parent' | 'headteacher' | 'director' | 'schoolDirector' | 'bursar' | 'it';
+  status?: 'active' | 'inactive' | 'suspended';
+  avatar?: string;
+};
+
+/**
+ * Create a new user/staff record in the Appwrite users collection.
+ * This is client-side creation of an app user profile (not Appwrite Auth user).
+ */
+export const createStaff = async (data: CreateSystemUserInput): Promise<SystemUser> => {
+  try {
+    // Ensure session exists; useful for createdBy if schema tracks it later
+    try { await account.get(); } catch {}
+
+    const newId = ID.unique();
+    const doc = await databases.createDocument(
+      DATABASE_ID,
+      USERS_COLLECTION_ID,
+      newId,
+      {
+        userId: newId,
+        fullName: data.fullName,
+        email: data.email,
+        phoneNumber: data.phoneNumber,
+        userType: data.userType,
+        status: data.status ?? 'active',
+        avatar: data.avatar || undefined,
+        lastLogin: null,
+      }
+    );
+
+    return doc as unknown as SystemUser;
+  } catch (error) {
+    console.error('Error creating staff user:', error);
+    throw error;
+  }
+};
+
 export const updateUserStatus = async (
   userId: string,
   status: 'active' | 'inactive' | 'suspended'

@@ -46,6 +46,7 @@ import ITStudentAccountsPage from '@/pages/ITStudentAccountsPage'
 import ITSystemHealthPage from '@/pages/ITSystemHealthPage'
 import ITBackupPage from '@/pages/ITBackupPage'
 import { useAuthStore } from '@/store/authStore'
+import HeadTeacherDashboardPage from '@/pages/HeadTeacherDashboardPage'
 
 export default function DashboardLayout() {
   const user = useAuthStore((state) => state.user)
@@ -110,6 +111,8 @@ export default function DashboardLayout() {
             <Route path="/it/system" element={<ITSystemHealthPage />} />
             <Route path="/it/audit" element={<AuditLogsPage />} />
             <Route path="/it/backup" element={<ITBackupPage />} />
+            {/* Head Teacher routes */}
+            <Route path="/headteacher/dashboard" element={<HeadTeacherDashboardPage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
