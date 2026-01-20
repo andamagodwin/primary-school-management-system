@@ -153,9 +153,9 @@ export default function SportsEventsPage() {
 
       {/* Add Event Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="w-full max-w-2xl rounded-lg border bg-card p-6">
-            <div className="mb-4 flex items-center justify-between border-b pb-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 sm:p-6">
+          <div className="w-full max-w-2xl rounded-lg border bg-card max-h-[90vh] overflow-y-auto p-6">
+            <div className="mb-4 flex items-center justify-between border-b pb-4 sticky top-0 bg-card z-10">
               <h3 className="text-lg font-semibold">Add New Event</h3>
               <button
                 onClick={() => setShowAddModal(false)}
@@ -164,7 +164,7 @@ export default function SportsEventsPage() {
                 ×
               </button>
             </div>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4 pb-4">
               <div>
                 <label className="mb-2 block text-sm font-medium">Event Title</label>
                 <input
@@ -236,7 +236,7 @@ export default function SportsEventsPage() {
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-4">
+              <div className="flex justify-end gap-2 pt-4 sticky bottom-0 bg-card pb-2">
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
